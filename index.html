@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Gracie Barra</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Gracie_Barra_Logo.svg/1200px-Gracie_Barra_Logo.svg.png" alt="Gracie Barra Logo">
+        </div>
+
+        <form id="login-form" class="login-form">
+            <div class="input-group">
+                <input type="email" id="login-email" placeholder="E-mail" required>
+            </div>
+            <div class="input-group">
+                <input type="password" id="login-senha" placeholder="Senha" required>
+            </div>
+            <button type="submit" class="btn-login-main">Entrar</button>
+        </form>
+
+        <div class="divider">ou</div>
+
+        <div class="auth-buttons">
+            <button class="btn google" onclick="socialLogin('Google')">
+                <i class="fab fa-google"></i> Entrar com o Google
+            </button>
+            <button class="btn apple" onclick="socialLogin('Apple')">
+                <i class="fab fa-apple"></i> Entrar com a Apple
+            </button>
+        </div>
+
+        <p class="signup-text">Não tem uma conta? <a href="cadastro.html">Cadastre-se</a></p>
+    </div>
+
+    <script src="script-login.js"></script>
+</body>
+</html>

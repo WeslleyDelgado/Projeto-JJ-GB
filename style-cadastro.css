@@ -1,0 +1,108 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f0f2f2;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 400px;
+    background-color: #f0f2f2;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    margin-bottom: 30px;
+}
+
+.btn-back {
+    text-decoration: none;
+    color: #2c5282;
+    font-size: 20px;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.header p {
+    color: #718096;
+    font-size: 14px;
+}
+
+/* Formulário */
+.form-section {
+    flex: 1;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    color: #4a5568;
+    margin-bottom: 8px;
+}
+
+.input-group input, .input-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #cbd5e0;
+    border-radius: 8px;
+    background-color: #fff;
+    font-size: 16px;
+    outline: none;
+    transition: border 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #2c5282;
+}
+
+.btn-primary {
+    width: 100%;
+    background-color: #083e76;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #062c54;
+}
+
+.footer-text {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 14px;
+    color: #4a5568;
+}
+
+.footer-text a {
+    color: #2c5282;
+    text-decoration: none;
+    font-weight: bold;
+}

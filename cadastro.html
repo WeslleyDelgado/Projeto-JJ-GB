@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Gracie Barra</title>
+    <link rel="stylesheet" href="style-cadastro.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <header class="header">
+            <a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i></a>
+            <h1>Criar Conta</h1>
+            <p>Preencha os dados abaixo para começar.</p>
+        </header>
+
+        <main class="form-section">
+            <form id="form-cadastro">
+                <div class="input-group">
+                    <label>Nome Completo</label>
+                    <input type="text" placeholder="Ex: Carlos Gracie" required>
+                </div>
+
+                <div class="input-group">
+                    <label>E-mail</label>
+                    <input type="email" placeholder="seu@email.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Senha</label>
+                    <input type="password" placeholder="No mínimo 6 caracteres" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Unidade (Escola)</label>
+                    <select required>
+                        <option value="">Selecione sua unidade</option>
+                        <option value="gb-matriz">Gracie Barra Matriz</option>
+                        <option value="gb-local">Gracie Barra Local</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primary">Finalizar Cadastro</button>
+            </form>
+        </main>
+
+        <footer class="footer-text">
+            Já possui uma conta? <a href="index.html">Faça Login</a>
+        </footer>
+    </div>
+
+<script src="script-cadastro.js"></script>
+</body>
+</html>

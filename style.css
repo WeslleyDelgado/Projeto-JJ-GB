@@ -1,0 +1,132 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f4f4f4; /* Cor de fundo levemente cinza */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    text-align: center;
+    width: 100%;
+    max-width: 350px;
+    padding: 20px;
+}
+
+.logo img {
+    width: 200px;
+    margin-bottom: 30px;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #000;
+}
+
+.auth-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #cfe2f3; /* Azul claro da imagem */
+    color: #000;
+    transition: background 0.3s;
+}
+
+.btn i {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.btn:hover {
+    background-color: #b8d4ed;
+}
+
+.signup-text {
+    margin-top: 50px;
+    font-size: 14px;
+    color: #333;
+}
+
+.signup-text a {
+    color: #3182ce;
+    text-decoration: none;
+}
+
+.signup-text a:hover {
+    text-decoration: underline;
+}
+
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #cbd5e0;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #fff;
+}
+
+.btn-login-main {
+    background-color: #083e76; /* Azul Marinho padrão */
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-login-main:hover {
+    background-color: #062c54;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #718096;
+    margin: 20px 0;
+}
+
+.divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #cbd5e0;
+}
+
+.divider:not(:empty)::before { margin-right: .5em; }
+.divider:not(:empty)::after { margin-left: .5em; }
+
+.btn.google, .btn.apple {
+    background-color: #e2e8f0;
+    font-weight: 500;
+}
