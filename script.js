@@ -6,84 +6,6 @@ window.onload = function() {
     }
 };
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
-
-body {
-    background-color: #f4f4f4; /* Cor de fundo levemente cinza */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-.login-container {
-    text-align: center;
-    width: 100%;
-    max-width: 350px;
-    padding: 20px;
-}
-
-.logo img {
-    width: 200px;
-    margin-bottom: 30px;
-}
-
-h1 {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 30px;
-    color: #000;
-}
-
-.auth-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-    background-color: #cfe2f3; /* Azul claro da imagem */
-    color: #000;
-    transition: background 0.3s;
-}
-
-.btn i {
-    margin-right: 10px;
-    font-size: 18px;
-}
-
-.btn:hover {
-    background-color: #b8d4ed;
-}
-
-.signup-text {
-    margin-top: 50px;
-    font-size: 14px;
-    color: #333;
-}
-
-.signup-text a {
-    color: #3182ce;
-    text-decoration: none;
-}
-
-.signup-text a:hover {
-    text-decoration: underline;
-}
-
 function startCapture() {
     alert("Câmera acessada! (Simulação)");
 }
@@ -145,14 +67,45 @@ function startScanner() {
         (decodedText, decodedResult) => {
             // SUCESSO: O que fazer quando ler o código
             console.log(`Código lido: ${decodedText}`);
-            
-            statusText.innerHTML = "Código Lido com Sucesso!";
-            resultMsg.style.display = "block";
-            resultMsg.innerText = "Conteúdo: " + decodedText;
-            
-            // Para a câmera após a leitura
-            html5QrCode.stop();
-            btn.innerHTML = "Escanear Novamente";
+
+            html5QrCode.stop().then(() => {
+                // 1. Recuperar o token seguro salvo no login
+                const token = localStorage.getItem('auth_token');
+                if (!token) {
+                    alert("Você precisa estar logado para registrar presença.");
+                    window.location.href = "index.html";
+                    return;
+                }
+
+                // 2. Enviar a presença para o backend seguro
+                fetch('http://localhost:3000/api/presencas', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token // Envia o token para provar quem somos
+                    },
+                    body: JSON.stringify({ aula: decodedText })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.erro) {
+                        alert(data.erro);
+                    } else {
+                        // 3. Mostrar sucesso na tela
+                        document.getElementById('reader').style.display = "none";
+                        if (document.getElementById('status')) document.getElementById('status').style.display = "none";
+                        resultMsg.style.display = "block";
+                        resultMsg.innerHTML = `Presença Confirmada!<br><small>${decodedText}</small>`;
+                        btn.innerHTML = "Escanear Novamente";
+                    }
+                })
+                .catch(err => {
+                    console.error("Erro ao registrar presença no servidor:", err);
+                    alert("Erro de conexão.");
+                });
+            }).catch(err => {
+                console.error("Erro ao parar a câmera", err);
+            });
         },
         (errorMessage) => {
             // Erro de leitura (comum enquanto procura o código)

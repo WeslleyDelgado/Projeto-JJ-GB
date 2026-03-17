@@ -3,40 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Área do Aluno - Scanner</title>
+    <title>Histórico de Presenças</title>
     <link rel="stylesheet" href="style-principal.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
 <body>
-
     <div class="app-container">
         <header class="header">
-            <h1>Olá, <span class="user-name">[Aluno]</span></h1>
+            <h1>Meu <span class="user-name">Histórico</span></h1>
+            <p style="color: #718096; font-size: 14px;">Suas últimas aulas registradas</p>
         </header>
 
-        <main class="scanner-section">
-            <div class="scanner-box">
-                <p id="status">Aponte para o<br>QR Code da aula</p>
-                
-                <div id="reader"></div>
-
-                <div id="result-message" style="display:none; margin: 15px; color: #276749; font-weight: bold;">
-                    <i class="fa-solid fa-circle-check"></i> Presença Confirmada!
-                </div>
-
-                <button id="btn-scan" class="btn-capture" onclick="startScanner()">
-                    Iniciar Captura
-                </button>
+        <main class="content-section">
+            <div id="lista-historico" class="historico-container">
+                <div class="empty-state">Nenhuma presença registrada ainda.</div>
             </div>
         </main>
 
         <nav class="bottom-nav">
-            <a href="#" class="nav-item active">
+            <a href="principal.html" class="nav-item">
                 <i class="fa-solid fa-camera"></i>
                 <span>QR Code</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="historico.html" class="nav-item active">
                 <i class="fa-solid fa-calendar-days"></i>
                 <span>Histórico</span>
             </a>
@@ -47,6 +36,6 @@
         </nav>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script-historico.js"></script>
 </body>
 </html>

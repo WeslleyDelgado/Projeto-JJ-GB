@@ -14,18 +14,37 @@ document.getElementById('form-cadastro').addEventListener('submit', function(e) 
         return;
     }
 
-    // Simulando o processo de salvamento
+    if (unidade === "") {
+        alert("Por favor, selecione sua unidade.");
+        return;
+    }
+
+    // Mostra feedback visual para o usuário
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Criando conta...';
     btn.disabled = true;
-    btn.style.opacity = "0.7";
 
-    setTimeout(() => {
-        // Salva o nome do usuário para usar na tela principal depois
-        localStorage.setItem('usuario_nome', nome.split(' ')[0]); // Salva apenas o primeiro nome
-        
-        alert("Conta criada com sucesso, " + nome.split(' ')[0] + "!");
-        
-        // Redireciona para a tela principal (ou login)
-        window.location.href = "principal.html"; 
-    }, 2000);
+    // Envia os dados para o backend seguro
+    fetch('http://localhost:3000/api/cadastro', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ nome, email, senha, unidade })
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => { throw new Error(err.erro || 'Erro no servidor'); });
+        }
+        return response.json();
+    })
+    .then(data => {
+        alert(data.mensagem);
+        window.location.href = "index.html"; // Redireciona para o login após o sucesso
+    })
+    .catch(error => {
+        console.error("Erro ao criar conta:", error);
+        alert("Erro no cadastro: " + error.message);
+        btn.innerHTML = 'Finalizar Cadastro';
+        btn.disabled = false;
+    });
 });
