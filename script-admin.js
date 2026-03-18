@@ -1,8 +1,8 @@
 window.onload = function() {
-    const token = localStorage.getItem('auth_token');
+    const token = localStorage.getItem('admin_token'); // Usa o token de admin
     if (!token) {
-        alert("Acesso negado. Faça login.");
-        window.location.href = "index.html";
+        alert("Acesso restrito ao Administrador.");
+        window.location.href = "admin-login.html";
         return;
     }
 
@@ -48,6 +48,13 @@ window.onload = function() {
             tbody.appendChild(tr);
         });
     }
+
+    // Lógica para sair do Painel
+    document.getElementById('btn-sair-admin').addEventListener('click', function(e) {
+        e.preventDefault();
+        localStorage.removeItem('admin_token');
+        window.location.href = "index.html";
+    });
 
     // Lógica da Barra de Pesquisa (Filtro em tempo real)
     document.getElementById('search-input').addEventListener('input', function(e) {

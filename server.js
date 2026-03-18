@@ -79,6 +79,22 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
+// Rota de Login do Administrador
+app.post('/api/admin/login', (req, res) => {
+    const { usuario, senha } = req.body;
+    
+    // Credenciais do administrador (você pode alterar para o que quiser)
+    const ADMIN_USER = process.env.ADMIN_USER || 'admin';
+    const ADMIN_PASS = process.env.ADMIN_PASS || 'admin123';
+
+    if (usuario === ADMIN_USER && senha === ADMIN_PASS) {
+        const token = jwt.sign({ role: 'admin' }, SECRET_KEY, { expiresIn: '12h' });
+        res.json({ mensagem: "Login autorizado", token });
+    } else {
+        res.status(401).json({ erro: "Usuário ou senha de administrador incorretos." });
+    }
+});
+
 // Middleware para verificar se o usuário está logado (tem um token válido)
 function verificarToken(req, res, next) {
     const token = req.headers['authorization'];
@@ -87,6 +103,19 @@ function verificarToken(req, res, next) {
     jwt.verify(token, SECRET_KEY, (err, decoded) => {
         if (err) return res.status(401).json({ erro: "Token inválido ou expirado." });
         req.usuarioId = decoded.id; // Salva o ID do usuário na requisição para as próximas funções usarem
+        next();
+    });
+}
+
+// Middleware de segurança exclusivo para o Administrador
+function verificarTokenAdmin(req, res, next) {
+    const token = req.headers['authorization'];
+    if (!token) return res.status(403).json({ erro: "Acesso negado." });
+    
+    jwt.verify(token, SECRET_KEY, (err, decoded) => {
+        if (err || decoded.role !== 'admin') {
+            return res.status(401).json({ erro: "Acesso restrito a administradores." });
+        }
         next();
     });
 }
@@ -121,7 +150,7 @@ app.get('/api/presencas', verificarToken, async (req, res) => {
 });
 
 // Rota para o Administrador ver TODAS as presenças
-app.get('/api/admin/presencas', verificarToken, async (req, res) => {
+app.get('/api/admin/presencas', verificarTokenAdmin, async (req, res) => {
     try {
         const query = `
             SELECT p.id, p.aula, p.data, u.nome, u.unidade 

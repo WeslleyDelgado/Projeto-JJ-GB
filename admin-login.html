@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Gracie Barra</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #1a202c; color: white; }
+        .login-container { background: #2d3748; border-radius: 10px; padding: 30px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .input-group input { background-color: #4a5568; color: white; border: 1px solid #718096; }
+        .input-group input::placeholder { color: #a0aec0; }
+        .btn-login-main { background-color: #c53030; }
+        .btn-login-main:hover { background-color: #9b2c2c; }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div style="font-size: 50px; color: #c53030; margin-bottom: 20px;">
+            <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h2 style="margin-bottom: 20px;">Painel Administrativo</h2>
+
+        <form id="admin-login-form" class="login-form">
+            <div class="input-group">
+                <input type="text" id="admin-user" placeholder="Usuário (ex: admin)" required>
+            </div>
+            <div class="input-group">
+                <input type="password" id="admin-senha" placeholder="Senha" required>
+            </div>
+            <button type="submit" class="btn-login-main">Acessar Painel</button>
+        </form>
+        <p class="signup-text" style="margin-top: 20px;"><a href="index.html" style="color: #a0aec0;"><i class="fa-solid fa-arrow-left"></i> Voltar para Alunos</a></p>
+    </div>
+    <script src="config.js"></script>
+    <script src="script-admin-login.js"></script>
+</body>
+</html>
