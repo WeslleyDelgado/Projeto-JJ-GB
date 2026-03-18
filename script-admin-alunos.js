@@ -15,11 +15,16 @@ window.onload = function() {
             method: 'GET',
             headers: { 'Authorization': token }
         })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => { throw new Error(err.erro || "Erro no servidor"); });
+        .then(async response => {
+            const text = await response.text(); // Lê a resposta como texto primeiro
+            try {
+                const data = JSON.parse(text); // Tenta converter para formato de dados
+                if (!response.ok) throw new Error(data.erro || "Erro no servidor");
+                return data;
+            } catch (e) {
+                // Se não for dado válido (for um HTML), é o Render reiniciando
+                throw new Error("O servidor (Render) está reiniciando ou acordando. Aguarde 1 minuto e recarregue a página.");
             }
-            return response.json();
         })
         .then(data => {
             todosAlunos = data;
