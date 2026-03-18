@@ -11,17 +11,23 @@ app.use(cors()); // Permite que seu frontend HTML se comunique com esta API
 
 const SECRET_KEY = process.env.SECRET_KEY; 
 
+if (!SECRET_KEY) {
+    console.error("ERRO FATAL: SECRET_KEY não está definida no arquivo .env!");
+    process.exit(1); // Encerra o servidor para evitar falhas de segurança
+}
+
 // Configuração da conexão com o PostgreSQL
 const pool = new Pool({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT,
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false // Obrigatório para acessar bancos na nuvem com segurança
+    }
 });
 
 // Rota de Cadastro Seguro
 app.post('/api/cadastro', async (req, res) => {
+    console.log("\n=== NOVA TENTATIVA DE CADASTRO ===");
+    console.log("Dados recebidos do site:", req.body);
     try {
         const { nome, email, senha, unidade } = req.body;
         

@@ -28,15 +28,19 @@
                 <button id="btn-scan" class="btn-capture" onclick="startScanner()">
                     Iniciar Captura
                 </button>
+
+                <button id="btn-simulate" class="btn-capture" style="background-color: #4a5568; margin-top: 10px;" onclick="simulateScan()">
+                    <i class="fa-solid fa-laptop"></i> Simular (Sem Câmera)
+                </button>
             </div>
         </main>
 
         <nav class="bottom-nav">
-            <a href="#" class="nav-item active">
+            <a href="principal.html" class="nav-item active">
                 <i class="fa-solid fa-camera"></i>
                 <span>QR Code</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="historico.html" class="nav-item">
                 <i class="fa-solid fa-calendar-days"></i>
                 <span>Histórico</span>
             </a>
@@ -47,6 +51,7 @@
         </nav>
     </div>
 
+    <script src="config.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

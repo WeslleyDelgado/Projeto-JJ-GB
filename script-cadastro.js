@@ -24,7 +24,7 @@ document.getElementById('form-cadastro').addEventListener('submit', function(e) 
     btn.disabled = true;
 
     // Envia os dados para o backend seguro
-    fetch('http://localhost:3000/api/cadastro', {
+    fetch(`${API_BASE_URL}/api/cadastro`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

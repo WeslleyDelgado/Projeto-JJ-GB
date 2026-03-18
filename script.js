@@ -52,6 +52,11 @@ function startScanner() {
     const btn = document.getElementById('btn-scan');
     const resultMsg = document.getElementById('result-message');
 
+    // Reseta a tela para garantir que a câmera reapareça caso seja um novo escaneamento
+    document.getElementById('reader').style.display = "block";
+    resultMsg.style.display = "none";
+    if (statusText) statusText.style.display = "block";
+
     // Configuração do scanner
     html5QrCode = new Html5Qrcode("reader");
 
@@ -78,7 +83,7 @@ function startScanner() {
                 }
 
                 // 2. Enviar a presença para o backend seguro
-                fetch('http://localhost:3000/api/presencas', {
+                fetch(`${API_BASE_URL}/api/presencas`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -117,4 +122,41 @@ function startScanner() {
 
     btn.innerHTML = "Procurando...";
     btn.style.backgroundColor = "#2c5282";
+}
+
+function simulateScan() {
+    const decodedText = "Aula de Jiu-Jitsu (Simulada)";
+    const resultMsg = document.getElementById('result-message');
+
+    const token = localStorage.getItem('auth_token');
+    if (!token) {
+        alert("Você precisa estar logado para registrar presença.");
+        window.location.href = "index.html";
+        return;
+    }
+
+    // Envia a presença simulada para o backend
+    fetch(`${API_BASE_URL}/api/presencas`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token 
+        },
+        body: JSON.stringify({ aula: decodedText })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.erro) {
+            alert(data.erro);
+        } else {
+            document.getElementById('reader').style.display = "none";
+            if (document.getElementById('status')) document.getElementById('status').style.display = "none";
+            resultMsg.style.display = "block";
+            resultMsg.innerHTML = `Presença Confirmada!<br><small>${decodedText}</small>`;
+        }
+    })
+    .catch(err => {
+        console.error("Erro ao registrar presença no servidor:", err);
+        alert("Erro de conexão ao simular.");
+    });
 }

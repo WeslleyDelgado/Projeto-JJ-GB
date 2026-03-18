@@ -9,7 +9,7 @@ window.onload = function() {
     }
 
     // Busca o histórico diretamente do servidor seguro
-    fetch('http://localhost:3000/api/presencas', {
+    fetch(`${API_BASE_URL}/api/presencas`, {
         method: 'GET',
         headers: {
             'Authorization': token // O servidor sabe quem somos por causa do token

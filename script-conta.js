@@ -16,7 +16,7 @@ window.onload = function() {
     let fotoBase64 = null; // Variável para guardar a foto em texto
 
     // Busca os dados do usuário no servidor
-    fetch('http://localhost:3000/api/usuario', {
+    fetch(`${API_BASE_URL}/api/usuario`, {
         method: 'GET',
         headers: {
             'Authorization': token
@@ -76,7 +76,7 @@ window.onload = function() {
             dadosAtualizados.novaSenha = novaSenha;
         }
 
-        fetch('http://localhost:3000/api/usuario', {
+        fetch(`${API_BASE_URL}/api/usuario`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
