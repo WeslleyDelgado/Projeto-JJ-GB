@@ -120,6 +120,23 @@ app.get('/api/presencas', verificarToken, async (req, res) => {
     }
 });
 
+// Rota para o Administrador ver TODAS as presenças
+app.get('/api/admin/presencas', verificarToken, async (req, res) => {
+    try {
+        const query = `
+            SELECT p.id, p.aula, p.data, u.nome, u.unidade 
+            FROM presencas p 
+            JOIN usuarios u ON p.usuario_id = u.id 
+            ORDER BY p.id DESC
+        `;
+        const resultado = await pool.query(query);
+        res.json(resultado.rows);
+    } catch (erro) {
+        console.error("Erro ao buscar presenças para admin:", erro);
+        res.status(500).json({ erro: "Erro interno no servidor." });
+    }
+});
+
 // Rota para buscar os dados do usuário logado
 app.get('/api/usuario', verificarToken, async (req, res) => {
     try {
