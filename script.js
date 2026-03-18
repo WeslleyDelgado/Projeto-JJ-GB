@@ -4,7 +4,51 @@ window.onload = function() {
     if (nomeSalvo) {
         document.querySelector('.user-name').innerText = nomeSalvo;
     }
+
+    // Busca a foto de perfil do usuário logado
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+        fetch(`${API_BASE_URL}/api/usuario`, {
+            headers: { 'Authorization': token }
+        })
+        .then(response => response.json())
+        .then(usuario => {
+            if (usuario.foto_perfil && document.getElementById('header-foto-perfil')) {
+                document.getElementById('header-foto-perfil').src = usuario.foto_perfil;
+            }
+
+            // Exibir a faixa do aluno
+            const faixa = calcularFaixa(usuario.total_presencas || 0, usuario.faixa);
+            const badge = document.getElementById('header-faixa');
+            if (badge) {
+                badge.innerText = faixa.nome + " (" + usuario.total_presencas + " aulas)";
+                badge.style.backgroundColor = faixa.cor;
+                badge.style.color = faixa.texto;
+                badge.style.border = `1px solid ${faixa.borda}`;
+                badge.style.display = "inline-block";
+            }
+        })
+        .catch(err => console.error("Erro ao carregar foto do header:", err));
+    }
 };
+
+function calcularFaixa(total, manual) {
+    if (manual) {
+        const faixas = {
+            "Branca": { nome: "Faixa Branca", cor: "#f8f9fa", texto: "#2d3748", borda: "#cbd5e0" },
+            "Azul": { nome: "Faixa Azul", cor: "#3182ce", texto: "#ffffff", borda: "#2b6cb0" },
+            "Roxa": { nome: "Faixa Roxa", cor: "#805ad5", texto: "#ffffff", borda: "#6b46c1" },
+            "Marrom": { nome: "Faixa Marrom", cor: "#744210", texto: "#ffffff", borda: "#5f370e" },
+            "Preta": { nome: "Faixa Preta", cor: "#1a202c", texto: "#ffffff", borda: "#000000" }
+        };
+        return faixas[manual] || faixas["Branca"];
+    }
+    if (total < 20) return { nome: "Faixa Branca", cor: "#f8f9fa", texto: "#2d3748", borda: "#cbd5e0" };
+    if (total < 60) return { nome: "Faixa Azul", cor: "#3182ce", texto: "#ffffff", borda: "#2b6cb0" };
+    if (total < 120) return { nome: "Faixa Roxa", cor: "#805ad5", texto: "#ffffff", borda: "#6b46c1" };
+    if (total < 200) return { nome: "Faixa Marrom", cor: "#744210", texto: "#ffffff", borda: "#5f370e" };
+    return { nome: "Faixa Preta", cor: "#1a202c", texto: "#ffffff", borda: "#000000" };
+}
 
 function startCapture() {
     alert("Câmera acessada! (Simulação)");

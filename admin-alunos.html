@@ -3,42 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Admin - Gracie Barra</title>
+    <title>Alunos - Admin Gracie Barra</title>
     <link rel="stylesheet" href="style-principal.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#083e76">
     <style>
-        body {
-            background-color: #f4f4f4;
-            display: block; /* Tira o formato de celular */
-            height: auto;
-        }
-        .admin-container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        .search-bar {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #cbd5e0;
-            border-radius: 8px;
-            font-size: 16px;
-            margin-bottom: 20px;
-            outline: none;
-        }
-        .search-bar:focus { border-color: #083e76; }
-        
+        body { background-color: #f4f4f4; display: block; height: auto; }
+        .admin-container { max-width: 900px; margin: 40px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .search-bar { width: 100%; padding: 12px 15px; border: 1px solid #cbd5e0; border-radius: 8px; font-size: 16px; margin-bottom: 20px; outline: none; }
         .table-responsive { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; min-width: 600px; }
         th, td { padding: 15px; text-align: left; border-bottom: 1px solid #e2e8f0; }
         th { background-color: #083e76; color: white; }
-        tr:hover { background-color: #f7fafc; }
         .badge { background: #e2e8f0; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; }
+        select.faixa-select { padding: 8px; border-radius: 5px; border: 1px solid #cbd5e0; background: #fff; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -47,16 +25,16 @@
             <a href="#" id="btn-sair-admin" style="color: #c53030; font-size: 24px; text-decoration: none;" title="Sair do Painel"><i class="fa-solid fa-right-from-bracket"></i></a>
             <div>
                 <h1 style="margin: 0; color: #333; font-size: 24px;">Painel <span class="user-name">Administrativo</span></h1>
-                <p style="color: #718096; font-size: 14px; margin: 0;">Relatório geral de presenças</p>
+                <p style="color: #718096; font-size: 14px; margin: 0;">Gerenciamento de Alunos e Faixas</p>
             </div>
         </header>
 
         <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-            <a href="admin.html" style="flex: 1; text-align: center; background-color: #083e76; color: white; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold;">Histórico de Aulas</a>
-            <a href="admin-alunos.html" style="flex: 1; text-align: center; background-color: #e2e8f0; color: #2d3748; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold;">Gerenciar Faixas</a>
+            <a href="admin.html" style="flex: 1; text-align: center; background-color: #e2e8f0; color: #2d3748; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold;">Histórico de Aulas</a>
+            <a href="admin-alunos.html" style="flex: 1; text-align: center; background-color: #083e76; color: white; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold;">Gerenciar Faixas</a>
         </div>
 
-        <input type="text" id="search-input" class="search-bar" placeholder="🔍 Buscar por aluno, aula ou unidade...">
+        <input type="text" id="search-input" class="search-bar" placeholder="🔍 Buscar por aluno ou unidade...">
 
         <div class="table-responsive">
             <table>
@@ -64,8 +42,8 @@
                     <tr>
                         <th>Aluno</th>
                         <th>Unidade</th>
-                        <th>Aula</th>
-                        <th>Data e Hora</th>
+                        <th>Total Presenças</th>
+                        <th>Ajustar Faixa</th>
                     </tr>
                 </thead>
                 <tbody id="tabela-corpo"></tbody>
@@ -73,6 +51,6 @@
         </div>
     </div>
     <script src="config.js"></script>
-    <script src="script-admin.js"></script>
+    <script src="script-admin-alunos.js"></script>
 </body>
 </html>

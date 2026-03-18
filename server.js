@@ -79,6 +79,24 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
+// Rota para Recuperação de Senha (Simulação / MVP)
+app.post('/api/recuperar-senha', async (req, res) => {
+    try {
+        const { email } = req.body;
+        const resultado = await pool.query('SELECT * FROM usuarios WHERE email = $1', [email]);
+        
+        if (resultado.rows.length === 0) {
+            return res.status(404).json({ erro: "E-mail não encontrado no sistema." });
+        }
+
+        // Em um sistema real, aqui você usaria uma biblioteca (como Nodemailer) para enviar um e-mail com link de redefinição.
+        res.json({ mensagem: "Simulação: As instruções para redefinir sua senha foram enviadas para o seu e-mail!" });
+    } catch (erro) {
+        console.error("Erro na recuperação de senha:", erro);
+        res.status(500).json({ erro: "Erro interno no servidor." });
+    }
+});
+
 // Rota de Login do Administrador
 app.post('/api/admin/login', (req, res) => {
     const { usuario, senha } = req.body;
@@ -125,7 +143,19 @@ app.post('/api/presencas', verificarToken, async (req, res) => {
     try {
         const { aula } = req.body;
         const dataAtual = new Date().toLocaleString('pt-BR');
+        const dataHoje = new Date().toLocaleDateString('pt-BR'); // Pegamos apenas o dia atual (ex: 25/10/2023)
         
+        // 1. Verifica se já existe uma presença deste aluno no dia de hoje
+        const verificacao = await pool.query(
+            'SELECT * FROM presencas WHERE usuario_id = $1 AND data LIKE $2',
+            [req.usuarioId, `${dataHoje}%`]
+        );
+        
+        if (verificacao.rows.length > 0) {
+            return res.status(400).json({ erro: "Você já registrou sua presença hoje! Bom descanso e até amanhã." });
+        }
+        
+        // 2. Se não existir, salva a nova presença
         const resultado = await pool.query(
             'INSERT INTO presencas (usuario_id, aula, data) VALUES ($1, $2, $3) RETURNING *',
             [req.usuarioId, aula, dataAtual]
@@ -166,11 +196,50 @@ app.get('/api/admin/presencas', verificarTokenAdmin, async (req, res) => {
     }
 });
 
+// Rota para o Administrador ver todos os alunos e suas faixas
+app.get('/api/admin/alunos', verificarTokenAdmin, async (req, res) => {
+    try {
+        const query = `
+            SELECT id, nome, unidade, faixa, 
+                   (SELECT COUNT(*) FROM presencas p WHERE p.usuario_id = u.id) as total_presencas 
+            FROM usuarios u 
+            ORDER BY nome ASC
+        `;
+        const resultado = await pool.query(query);
+        res.json(resultado.rows);
+    } catch (erro) {
+        console.error("Erro ao buscar alunos para admin:", erro);
+        res.status(500).json({ erro: "Erro interno no servidor." });
+    }
+});
+
+// Rota para o Administrador alterar a faixa de um aluno
+app.put('/api/admin/alunos/:id/faixa', verificarTokenAdmin, async (req, res) => {
+    try {
+        const { faixa } = req.body;
+        const alunoId = req.params.id;
+        
+        // Se vier vazio (""), gravamos como null no banco (modo automático)
+        const valorFaixa = faixa === "" ? null : faixa;
+        
+        await pool.query('UPDATE usuarios SET faixa = $1 WHERE id = $2', [valorFaixa, alunoId]);
+        res.json({ mensagem: "Faixa atualizada com sucesso!" });
+    } catch (erro) {
+        console.error("Erro ao atualizar faixa do aluno:", erro);
+        res.status(500).json({ erro: "Erro interno no servidor." });
+    }
+});
+
 // Rota para buscar os dados do usuário logado
 app.get('/api/usuario', verificarToken, async (req, res) => {
     try {
         // Busca os dados do usuário, mas NÃO retorna a senha por segurança
-        const resultado = await pool.query('SELECT id, nome, email, unidade, foto_perfil FROM usuarios WHERE id = $1', [req.usuarioId]);
+        const query = `
+            SELECT id, nome, email, unidade, foto_perfil, faixa,
+                   (SELECT COUNT(*) FROM presencas WHERE usuario_id = $1) as total_presencas 
+            FROM usuarios u WHERE id = $1
+        `;
+        const resultado = await pool.query(query, [req.usuarioId]);
         if (resultado.rows.length === 0) return res.status(404).json({ erro: "Usuário não encontrado." });
         
         res.json(resultado.rows[0]);

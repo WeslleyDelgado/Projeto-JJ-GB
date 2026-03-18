@@ -19,7 +19,19 @@ body {
     position: relative;
     display: flex;
     flex-direction: column;
+    overflow: hidden; /* Impede a tela toda de rolar, focando no conteúdo */
     padding: 20px;
+}
+
+/* Estilo da Faixa (Gamificação) */
+.badge-faixa {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* Header */
@@ -77,6 +89,14 @@ body {
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
+}
+
+/* Área de Conteúdo (Conta e Histórico) */
+.content-section {
+    flex: 1;
+    overflow-y: auto; /* Cria barra de rolagem apenas nesta área */
+    margin-bottom: 80px; /* Libera o espaço ocupado pelo menu inferior */
+    padding-bottom: 15px; /* Margem extra no final da rolagem */
 }
 
 /* Navegação Inferior */

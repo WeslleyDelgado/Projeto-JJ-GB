@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Senha - Gracie Barra</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#083e76">
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <img src="imagens/logo.png" alt="Gracie Barra Logo">
+        </div>
+
+        <h2 style="margin-bottom: 10px; font-size: 22px; color: #333;">Recuperar Senha</h2>
+        <p style="color: #718096; font-size: 14px; margin-bottom: 25px;">Digite seu e-mail de cadastro e enviaremos instruções para redefinir sua senha.</p>
+
+        <form id="form-recuperar" class="login-form">
+            <div class="input-group">
+                <input type="email" id="recuperar-email" placeholder="Seu e-mail" required>
+            </div>
+            <button type="submit" class="btn-login-main">Enviar Instruções</button>
+        </form>
+
+        <p class="signup-text" style="margin-top: 25px;">
+            <a href="index.html" style="color: #718096;"><i class="fa-solid fa-arrow-left"></i> Voltar para o Login</a>
+        </p>
+    </div>
+    <script src="config.js"></script>
+    <script src="script-esqueci-senha.js"></script>
+</body>
+</html>

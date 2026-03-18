@@ -34,6 +34,17 @@ window.onload = function() {
             if (usuario.foto_perfil) {
                 imgPerfil.src = usuario.foto_perfil;
             }
+
+            // Lógica da Faixa
+            const faixa = calcularFaixa(usuario.total_presencas || 0, usuario.faixa);
+            const badgeFaixa = document.getElementById('conta-faixa');
+            if (badgeFaixa) {
+                badgeFaixa.innerText = faixa.nome + " (" + usuario.total_presencas + " aulas)";
+                badgeFaixa.style.backgroundColor = faixa.cor;
+                badgeFaixa.style.color = faixa.texto;
+                badgeFaixa.style.border = `1px solid ${faixa.borda}`;
+                badgeFaixa.style.display = "inline-block";
+            }
         }
     })
     .catch(error => {
@@ -115,3 +126,21 @@ window.onload = function() {
         window.location.href = "index.html";
     });
 };
+
+function calcularFaixa(total, manual) {
+    if (manual) {
+        const faixas = {
+            "Branca": { nome: "Faixa Branca", cor: "#f8f9fa", texto: "#2d3748", borda: "#cbd5e0" },
+            "Azul": { nome: "Faixa Azul", cor: "#3182ce", texto: "#ffffff", borda: "#2b6cb0" },
+            "Roxa": { nome: "Faixa Roxa", cor: "#805ad5", texto: "#ffffff", borda: "#6b46c1" },
+            "Marrom": { nome: "Faixa Marrom", cor: "#744210", texto: "#ffffff", borda: "#5f370e" },
+            "Preta": { nome: "Faixa Preta", cor: "#1a202c", texto: "#ffffff", borda: "#000000" }
+        };
+        return faixas[manual] || faixas["Branca"];
+    }
+    if (total < 20) return { nome: "Faixa Branca", cor: "#f8f9fa", texto: "#2d3748", borda: "#cbd5e0" };
+    if (total < 60) return { nome: "Faixa Azul", cor: "#3182ce", texto: "#ffffff", borda: "#2b6cb0" };
+    if (total < 120) return { nome: "Faixa Roxa", cor: "#805ad5", texto: "#ffffff", borda: "#6b46c1" };
+    if (total < 200) return { nome: "Faixa Marrom", cor: "#744210", texto: "#ffffff", borda: "#5f370e" };
+    return { nome: "Faixa Preta", cor: "#1a202c", texto: "#ffffff", borda: "#000000" };
+}
