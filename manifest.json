@@ -1,0 +1,21 @@
+{
+  "name": "Gracie Barra - Área do Aluno",
+  "short_name": "GB Aluno",
+  "description": "Aplicativo de presença e histórico Gracie Barra.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#f0f2f2",
+  "theme_color": "#083e76",
+  "icons": [
+    {
+      "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Gracie_Barra_Logo.svg/192px-Gracie_Barra_Logo.svg.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Gracie_Barra_Logo.svg/512px-Gracie_Barra_Logo.svg.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
