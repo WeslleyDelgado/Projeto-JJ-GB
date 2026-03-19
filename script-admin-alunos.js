@@ -185,6 +185,33 @@ window.onload = function() {
         document.getElementById('modal-editar').style.display = 'none';
     };
 
+    window.resetarSenha = function() {
+        if (!alunoSelecionado) return;
+
+        const confirmacao = confirm(`Você tem certeza que deseja redefinir a senha de ${alunoSelecionado.nome}?\n\nA nova senha temporária será "Mudar123". O aluno deverá usá-la para logar e trocá-la imediatamente.`);
+
+        if (confirmacao) {
+            fetch(`${API_BASE_URL}/api/admin/alunos/${alunoSelecionado.id}/reset-senha`, {
+                method: 'POST',
+                headers: { 'Authorization': token }
+            })
+            .then(async response => {
+                const text = await response.text();
+                try {
+                    const data = JSON.parse(text);
+                    if (!response.ok) throw new Error(data.erro || "Erro no servidor.");
+                    alert(data.mensagem); // Exibe a mensagem de sucesso com a nova senha
+                } catch (e) {
+                    // Se cair aqui, o servidor devolveu HTML (Erro 404, Render dormindo, etc)
+                    throw new Error("Erro de comunicação com o servidor. Verifique se o config.js está correto ou se a atualização já subiu pro Render.");
+                }
+            })
+            .catch(err => {
+                alert("Erro ao redefinir senha: " + err.message);
+            });
+        }
+    };
+
     // Lida com o envio do formulário de edição do aluno
     document.getElementById('form-editar-aluno').addEventListener('submit', function(e) {
         e.preventDefault();

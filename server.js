@@ -257,6 +257,28 @@ app.put('/api/admin/alunos/:id', verificarTokenAdmin, async (req, res) => {
     }
 });
 
+// Rota para o Administrador redefinir a senha de um aluno
+app.post('/api/admin/alunos/:id/reset-senha', verificarTokenAdmin, async (req, res) => {
+    try {
+        const alunoId = req.params.id;
+        const senhaTemporaria = 'Mudar123'; // Senha padrão
+
+        // Criptografa a nova senha
+        const senhaCriptografada = await bcrypt.hash(senhaTemporaria, 10);
+
+        // Atualiza a senha no banco de dados
+        await pool.query(
+            'UPDATE usuarios SET senha = $1 WHERE id = $2',
+            [senhaCriptografada, alunoId]
+        );
+
+        res.json({ mensagem: `Senha redefinida com sucesso! A nova senha temporária é: ${senhaTemporaria}` });
+    } catch (erro) {
+        console.error("Erro ao redefinir senha do aluno:", erro);
+        res.status(500).json({ erro: "Erro interno no servidor." });
+    }
+});
+
 // Rota para buscar os dados do usuário logado
 app.get('/api/usuario', verificarToken, async (req, res) => {
     try {
