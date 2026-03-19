@@ -17,3 +17,10 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+        with:
+          args: >
+            -Dsonar.projectKey=WeslleyDelgado_Projeto-JJ-GB
+            -Dsonar.organization=weslleydelgado
+            -Dsonar.sources=.
+            -Dsonar.host.url=https://sonarcloud.io
