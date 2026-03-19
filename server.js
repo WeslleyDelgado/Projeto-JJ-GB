@@ -48,8 +48,8 @@ app.post('/api/cadastro', async (req, res) => {
         );
         
         res.status(201).json({ mensagem: "Usuário cadastrado com sucesso!" });
-    } catch (erro) {
-        console.error("Erro no cadastro:", erro);
+    } catch (error_) {
+        console.error("Erro no cadastro:", error_);
         res.status(500).json({ erro: "Erro interno no servidor." });
     }
 });
@@ -74,8 +74,8 @@ app.post('/api/login', async (req, res) => {
         const token = jwt.sign({ id: usuario.id, nome: usuario.nome }, SECRET_KEY, { expiresIn: '24h' });
         
         res.json({ mensagem: "Login efetuado", token, nome: usuario.nome });
-    } catch (erro) {
-        console.error("Erro no login:", erro);
+    } catch (error_) {
+        console.error("Erro no login:", error_);
         res.status(500).json({ erro: "Erro interno no servidor." });
     }
 });
@@ -92,8 +92,8 @@ app.post('/api/recuperar-senha', async (req, res) => {
 
         // Em um sistema real, aqui você usaria uma biblioteca (como Nodemailer) para enviar um e-mail com link de redefinição.
         res.json({ mensagem: "Simulação: As instruções para redefinir sua senha foram enviadas para o seu e-mail!" });
-    } catch (erro) {
-        console.error("Erro na recuperação de senha:", erro);
+    } catch (error_) {
+        console.error("Erro na recuperação de senha:", error_);
         res.status(500).json({ erro: "Erro interno no servidor." });
     }
 });
@@ -168,8 +168,8 @@ app.post('/api/presencas', verificarToken, async (req, res) => {
         );
         
         res.status(201).json({ mensagem: "Presença registrada com sucesso!", presenca: resultado.rows[0] });
-    } catch (erro) {
-        console.error("Erro ao registrar presença:", erro);
+    } catch (error_) {
+        console.error("Erro ao registrar presença:", error_);
         res.status(500).json({ erro: "Erro interno no servidor." });
     }
 });
@@ -179,8 +179,8 @@ app.get('/api/presencas', verificarToken, async (req, res) => {
     try {
         const resultado = await pool.query('SELECT * FROM presencas WHERE usuario_id = $1', [req.usuarioId]);
         res.json(resultado.rows);
-    } catch (erro) {
-        console.error("Erro ao buscar histórico:", erro);
+    } catch (error_) {
+        console.error("Erro ao buscar histórico:", error_);
         res.status(500).json({ erro: "Erro interno no servidor." });
     }
 });
@@ -196,8 +196,8 @@ app.get('/api/admin/presencas', verificarTokenAdmin, async (req, res) => {
         `;
         const resultado = await pool.query(query);
         res.json(resultado.rows);
-    } catch (erro) {
-        console.error("Erro ao buscar presenças para admin:", erro);
+    } catch (error_) {
+        console.error("Erro ao buscar presenças para admin:", error_);
         res.status(500).json({ erro: "Erro interno no servidor." });
     }
 });
@@ -213,8 +213,8 @@ app.get('/api/admin/alunos', verificarTokenAdmin, async (req, res) => {
         `;
         const resultado = await pool.query(query);
         res.json(resultado.rows);
-    } catch (erro) {
-        console.error("Erro ao buscar alunos para admin:", erro);
+    } catch (error_) {
+        console.error("Erro ao buscar alunos para admin:", error_);
         res.status(500).json({ erro: "Erro interno no servidor." });
     }
 });
@@ -230,8 +230,8 @@ app.put('/api/admin/alunos/:id/faixa', verificarTokenAdmin, async (req, res) => 
         
         await pool.query('UPDATE usuarios SET faixa = $1 WHERE id = $2', [valorFaixa, alunoId]);
         res.json({ mensagem: "Faixa atualizada com sucesso!" });
-    } catch (erro) {
-        console.error("Erro ao atualizar faixa do aluno:", erro);
+    } catch (error_) {
+        console.error("Erro ao atualizar faixa do aluno:", error_);
         res.status(500).json({ erro: "Erro interno no servidor." });
     }
 });
@@ -247,13 +247,31 @@ app.put('/api/admin/alunos/:id', verificarTokenAdmin, async (req, res) => {
             [nome, email, unidade, alunoId]
         );
         res.json({ mensagem: "Dados do aluno atualizados com sucesso!" });
-    } catch (erro) {
-        console.error("Erro ao atualizar aluno:", erro);
+    } catch (error_) {
+        console.error("Erro ao atualizar aluno:", error_);
         // Código 23505 do PostgreSQL significa "Violação de Unicidade" (E-mail já existe)
-        if (erro.code === '23505') {
+        if (error_.code === '23505') {
             return res.status(400).json({ erro: "Este e-mail já está em uso por outro aluno." });
         }
         res.status(500).json({ erro: "Erro interno no servidor." });
+    }
+});
+
+// Rota para o Administrador excluir um aluno
+app.delete('/api/admin/alunos/:id', verificarTokenAdmin, async (req, res) => {
+    try {
+        const alunoId = req.params.id;
+        
+        // Exclui as presenças do aluno primeiro (para evitar erro de vínculo no banco)
+        await pool.query('DELETE FROM presencas WHERE usuario_id = $1', [alunoId]);
+        
+        // Em seguida, exclui o usuário
+        await pool.query('DELETE FROM usuarios WHERE id = $1', [alunoId]);
+
+        res.json({ mensagem: "Aluno e histórico excluídos com sucesso!" });
+    } catch (error_) {
+        console.error("Erro ao excluir aluno:", error_);
+        res.status(500).json({ erro: "Erro interno no servidor ao tentar excluir o aluno." });
     }
 });
 
@@ -273,8 +291,8 @@ app.post('/api/admin/alunos/:id/reset-senha', verificarTokenAdmin, async (req, r
         );
 
         res.json({ mensagem: `Senha redefinida com sucesso! A nova senha temporária é: ${senhaTemporaria}` });
-    } catch (erro) {
-        console.error("Erro ao redefinir senha do aluno:", erro);
+    } catch (error_) {
+        console.error("Erro ao redefinir senha do aluno:", error_);
         res.status(500).json({ erro: "Erro interno no servidor." });
     }
 });
@@ -292,8 +310,8 @@ app.get('/api/usuario', verificarToken, async (req, res) => {
         if (resultado.rows.length === 0) return res.status(404).json({ erro: "Usuário não encontrado." });
         
         res.json(resultado.rows[0]);
-    } catch (erro) {
-        console.error("Erro ao buscar dados do usuário:", erro);
+    } catch (error_) {
+        console.error("Erro ao buscar dados do usuário:", error_);
         res.status(500).json({ erro: "Erro interno no servidor." });
     }
 });
@@ -331,8 +349,8 @@ app.put('/api/usuario', verificarToken, async (req, res) => {
         );
 
         res.json({ mensagem: "Dados atualizados com sucesso!", usuario: updateResult.rows[0] });
-    } catch (erro) {
-        console.error("Erro ao atualizar dados:", erro);
+    } catch (error_) {
+        console.error("Erro ao atualizar dados:", error_);
         res.status(500).json({ erro: "Erro interno no servidor." });
     }
 });

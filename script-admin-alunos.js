@@ -185,6 +185,34 @@ window.onload = function() {
         document.getElementById('modal-editar').style.display = 'none';
     };
 
+    window.excluirAluno = function() {
+        if (!alunoSelecionado) return;
+
+        const confirmacao = confirm(`⚠️ ATENÇÃO: Você está prestes a excluir o aluno ${alunoSelecionado.nome}!\n\nEsta ação apagará a conta do aluno e TODO o seu histórico de presenças.\nTem certeza que deseja continuar?`);
+
+        if (confirmacao) {
+            fetch(`${API_BASE_URL}/api/admin/alunos/${alunoSelecionado.id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': token }
+            })
+            .then(async response => {
+                const text = await response.text();
+                try {
+                    const data = JSON.parse(text);
+                    if (!response.ok) throw new Error(data.erro || "Erro no servidor.");
+                    alert(data.mensagem);
+                    fecharEditar();
+                    carregarDados(); // Atualiza a tabela
+                } catch (e) {
+                    throw new Error("Erro de comunicação com o servidor.");
+                }
+            })
+            .catch(err => {
+                alert("Erro ao excluir aluno: " + err.message);
+            });
+        }
+    };
+
     window.resetarSenha = function() {
         if (!alunoSelecionado) return;
 
