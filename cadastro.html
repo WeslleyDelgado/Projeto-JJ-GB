@@ -8,6 +8,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#083e76">
+    <style>
+        .error-message {
+            color: #c53030;
+            font-size: 12px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+            display: none; /* Escondido por padrão */
+            font-weight: 500;
+        }
+        .input-error { border-color: #c53030 !important; }
+    </style>
 </head>
 <body>
 
@@ -19,29 +30,33 @@
         </header>
 
         <main class="form-section">
-            <form id="form-cadastro">
+            <form id="form-cadastro" novalidate>
                 <div class="input-group">
                     <label>Nome Completo</label>
-                    <input type="text" placeholder="Ex: Carlos Gracie" required>
+                    <input type="text" id="cad-nome" placeholder="Ex: Carlos Gracie" required>
+                    <div id="err-nome" class="error-message">Por favor, insira seu nome completo.</div>
                 </div>
 
                 <div class="input-group">
                     <label>E-mail</label>
-                    <input type="email" placeholder="seu@email.com" required>
+                    <input type="email" id="cad-email" placeholder="seu@email.com" required>
+                    <div id="err-email" class="error-message">Por favor, insira um e-mail válido.</div>
                 </div>
 
                 <div class="input-group">
                     <label>Senha</label>
-                    <input type="password" placeholder="No mínimo 6 caracteres" required>
+                    <input type="password" id="cad-senha" placeholder="No mínimo 6 caracteres" required>
+                    <div id="err-senha" class="error-message">A senha deve ter pelo menos 6 caracteres.</div>
                 </div>
 
                 <div class="input-group">
                     <label>Unidade (Escola)</label>
-                    <select required>
+                    <select id="cad-unidade" required>
                         <option value="">Selecione sua unidade</option>
                         <option value="gb-matriz">Gracie Barra Centro</option>
                         <option value="gb-local">Gracie Barra Rio</option>
                     </select>
+                    <div id="err-unidade" class="error-message">Por favor, selecione sua unidade.</div>
                 </div>
 
                 <button type="submit" class="btn-primary">Finalizar Cadastro</button>

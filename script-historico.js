@@ -20,14 +20,17 @@ window.onload = function() {
         if (historico.length > 0) {
             listaContainer.innerHTML = ''; // Limpa o "Vazio"
             
-            historico.reverse().forEach(item => {
+            historico.reverse().forEach((item, index) => {
+                const delay = index * 0.1; // Adiciona um pequeno atraso (0.1s, 0.2s...) para cada card
                 const card = `
-                    <div class="card-presenca">
+                    <div class="card-presenca" style="animation-delay: ${delay}s">
+                        <div class="card-icon">
+                            <i class="fa-solid fa-circle-check" style="color: #276749; font-size: 24px;"></i>
+                        </div>
                         <div class="card-info">
                             <h3>${item.aula}</h3>
                             <p><i class="fa-regular fa-clock"></i> ${item.data}</p>
                         </div>
-                        <i class="fa-solid fa-circle-check" style="color: #276749;"></i>
                     </div>
                 `;
                 listaContainer.innerHTML += card;

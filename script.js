@@ -21,7 +21,7 @@ window.onload = function() {
             const faixa = calcularFaixa(usuario.total_presencas || 0, usuario.faixa);
             const badge = document.getElementById('header-faixa');
             if (badge) {
-                badge.innerText = faixa.nome + " (" + usuario.total_presencas + " aulas)";
+                badge.innerText = faixa.nome + " (" + (usuario.total_presencas || 0) + " aulas)";
                 badge.style.backgroundColor = faixa.cor;
                 badge.style.color = faixa.texto;
                 badge.style.border = `1px solid ${faixa.borda}`;
@@ -165,7 +165,7 @@ function startScanner() {
     });
 
     btn.innerHTML = "Procurando...";
-    btn.style.backgroundColor = "#2c5282";
+    btn.style.backgroundColor = "var(--cor-primaria-hover)";
 }
 
 function simulateScan() {

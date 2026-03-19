@@ -30,30 +30,30 @@
 
                 <div style="display: flex; flex-direction: column; gap: 5px;">
                     <label style="font-weight: bold; color: #333; font-size: 14px;">Nome Completo</label>
-                    <input type="text" id="edit-nome" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;" required>
+                    <input type="text" id="edit-nome" class="input-modern" required>
                 </div>
                 <div style="display: flex; flex-direction: column; gap: 5px;">
                     <label style="font-weight: bold; color: #333; font-size: 14px;">E-mail (Não editável)</label>
-                    <input type="email" id="edit-email" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #e9ecef; color: #666;" readonly>
+                    <input type="email" id="edit-email" class="input-modern" readonly>
                 </div>
                 <div style="display: flex; flex-direction: column; gap: 5px;">
                     <label style="font-weight: bold; color: #333; font-size: 14px;">Unidade</label>
-                    <select id="edit-unidade" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;" required>
+                    <select id="edit-unidade" class="input-modern" required>
                         <option value="gb-matriz">Gracie Barra Centro</option>
                         <option value="gb-local">Gracie Barra Rio</option>
                     </select>
                 </div>
                 
-                <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 10px 0;">
-                <p style="font-size: 13px; color: #718096; margin-bottom: -5px;">Para alterar a senha, preencha abaixo:</p>
-                
-                <div style="display: flex; flex-direction: column; gap: 5px;">
-                    <label style="font-weight: bold; color: #333; font-size: 14px;">Senha Atual</label>
-                    <input type="password" id="edit-senha-atual" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;" placeholder="Sua senha atual">
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 5px;">
-                    <label style="font-weight: bold; color: #333; font-size: 14px;">Nova Senha</label>
-                    <input type="password" id="edit-nova-senha" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;" placeholder="Sua nova senha">
+                <div class="password-section">
+                    <p style="font-size: 14px; font-weight: bold; color: #4a5568; margin-bottom: -5px;"><i class="fa-solid fa-lock" style="color: #a0aec0; margin-right: 5px;"></i> Alterar Senha</p>
+                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                        <label style="font-weight: bold; color: #333; font-size: 13px;">Senha Atual</label>
+                        <input type="password" id="edit-senha-atual" class="input-modern" placeholder="Sua senha atual">
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                        <label style="font-weight: bold; color: #333; font-size: 13px;">Nova Senha</label>
+                        <input type="password" id="edit-nova-senha" class="input-modern" placeholder="Sua nova senha">
+                    </div>
                 </div>
                 
                 <button type="submit" id="btn-salvar" class="btn-capture" style="width: 100%; margin-top: 10px; background-color: #276749; padding: 12px;">
@@ -61,7 +61,7 @@
                 </button>
             </form>
             
-            <button id="btn-logout" class="btn-capture" style="width: 100%; margin-top: 30px; background-color: #c53030;">
+            <button id="btn-logout" class="btn-outline-danger" style="width: 100%; margin-top: 30px;">
                 <i class="fa-solid fa-right-from-bracket"></i> Sair da Conta
             </button>
         </main>

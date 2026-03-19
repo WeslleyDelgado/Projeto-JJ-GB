@@ -2,22 +2,49 @@ document.getElementById('form-cadastro').addEventListener('submit', function(e) 
     e.preventDefault(); // Impede a página de recarregar
 
     // Capturando os valores dos campos
-    const nome = document.querySelector('input[type="text"]').value;
-    const email = document.querySelector('input[type="email"]').value;
-    const senha = document.querySelector('input[type="password"]').value;
-    const unidade = document.querySelector('select').value;
+    const nomeInput = document.getElementById('cad-nome');
+    const emailInput = document.getElementById('cad-email');
+    const senhaInput = document.getElementById('cad-senha');
+    const unidadeInput = document.getElementById('cad-unidade');
+    
+    const nome = nomeInput.value.trim();
+    const email = emailInput.value.trim();
+    const senha = senhaInput.value;
+    const unidade = unidadeInput.value;
     const btn = document.querySelector('.btn-primary');
 
-    // Validação simples
+    // Limpa erros anteriores da tela
+    document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+    let temErro = false;
+
+    // Função auxiliar para pintar a borda e mostrar o texto de erro
+    function mostrarErro(inputId, errorId) {
+        document.getElementById(inputId).classList.add('input-error');
+        document.getElementById(errorId).style.display = 'block';
+        temErro = true;
+    }
+
+    // Sequência de Validações
+    if (nome === "") {
+        mostrarErro('cad-nome', 'err-nome');
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (email === "" || !emailRegex.test(email)) {
+        mostrarErro('cad-email', 'err-email');
+    }
+
     if (senha.length < 6) {
-        alert("A senha deve ter pelo menos 6 caracteres.");
-        return;
+        mostrarErro('cad-senha', 'err-senha');
     }
 
     if (unidade === "") {
-        alert("Por favor, selecione sua unidade.");
-        return;
+        mostrarErro('cad-unidade', 'err-unidade');
     }
+
+    if (temErro) return; // Interrompe o envio se algum erro for encontrado
 
     // Mostra feedback visual para o usuário
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Criando conta...';

@@ -3,7 +3,7 @@
     --cor-primaria: #c53030; /* Vermelho GB */
     --cor-primaria-hover: #9b2c2c; /* Vermelho Escuro */
     --cor-secundaria: #1a202c; /* Preto/Escuro */
-    --cor-fundo: #f0f2f2;
+    --cor-fundo: #f8f9fa; /* Fundo cinza bem claro para maior contraste com os cards brancos */
     --cor-texto: #333333;
     --cor-nav-ativo-bg: #fed7d7; /* Fundo vermelho bem clarinho */
     --cor-nav-ativo-texto: #c53030;
@@ -37,13 +37,12 @@ body {
 /* Estilo da Faixa (Gamificação) */
 .badge-faixa {
     display: inline-block;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
     margin-top: 5px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    letter-spacing: 0.3px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* Header */
@@ -67,7 +66,11 @@ body {
 }
 
 .scanner-box {
-    width: 100%;
+    width: 90%;
+    height: 70%;
+    background-color: #d9e0e7; /* Cinza azulado claro */
+    border: 1px solid #b0bbc4;
+    border-radius: 4px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -178,45 +181,25 @@ body {
     position: absolute;
     color: #666;
 }
-
-/* Mira do Scanner (Crosshair) */
-.scanner-frame {
-    padding: 15px;
-    position: relative;
-    margin-bottom: 25px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.scanner-frame::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    /* Truque com gradient para desenhar a mira de 4 cantos */
-    background: 
-        linear-gradient(var(--cor-primaria), var(--cor-primaria)) top left / 30px 4px no-repeat,
-        linear-gradient(var(--cor-primaria), var(--cor-primaria)) top left / 4px 30px no-repeat,
-        linear-gradient(var(--cor-primaria), var(--cor-primaria)) top right / 30px 4px no-repeat,
-        linear-gradient(var(--cor-primaria), var(--cor-primaria)) top right / 4px 30px no-repeat,
-        linear-gradient(var(--cor-primaria), var(--cor-primaria)) bottom left / 30px 4px no-repeat,
-        linear-gradient(var(--cor-primaria), var(--cor-primaria)) bottom left / 4px 30px no-repeat,
-        linear-gradient(var(--cor-primaria), var(--cor-primaria)) bottom right / 30px 4px no-repeat,
-        linear-gradient(var(--cor-primaria), var(--cor-primaria)) bottom right / 4px 30px no-repeat;
-    pointer-events: none;
-    z-index: 10;
-    border-radius: 28px;
-}
+/* ... (mantenha o CSS anterior e adicione/ajuste estes) ... */
 
 #reader {
     width: 250px;
     height: 250px;
     border: 2px solid transparent !important;
-    border-radius: 20px;
+    margin-bottom: 20px;
+    border-radius: 12px;
     overflow: hidden;
     background: #000;
     position: relative;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    box-shadow: 0 0 0 2px rgba(197, 48, 48, 0.5);
+    animation: pulse-scanner 2s infinite;
+}
+
+@keyframes pulse-scanner {
+    0% { box-shadow: 0 0 0 0 rgba(197, 48, 48, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(197, 48, 48, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(197, 48, 48, 0); }
 }
 
 /* Esconde botões internos q a biblioteca cria */
@@ -226,7 +209,6 @@ body {
 
 #reader video {
     object-fit: cover !important;
-    border-radius: 20px;
 }
 .historico-container {
     padding: 10px;
@@ -237,13 +219,12 @@ body {
 
 .card-presenca {
     background: white;
-    padding: 15px;
-    border-radius: 10px;
-    border-left: 5px solid var(--cor-primaria);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* Sombra mais suave e espalhada */
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 15px; /* Espaço entre o ícone à esquerda e os textos */
     opacity: 0;
     transform: translateY(20px);
     animation: slideInUp 0.5s ease-out forwards;
@@ -265,11 +246,13 @@ body {
 .card-info h3 {
     font-size: 16px;
     color: var(--cor-secundaria);
+    margin-bottom: 4px;
 }
 
 .card-info p {
-    font-size: 12px;
-    color: #718096;
+    font-size: 13px;
+    color: #4a5568; /* Cinza mais escuro para melhorar a legibilidade */
+    font-weight: 500;
 }
 
 .empty-state {
@@ -337,28 +320,4 @@ body {
 
 .btn-outline-danger:active {
     transform: translateY(0) scale(0.95);
-}
-
-/* Botão Ghost (Simular) */
-.btn-ghost {
-    background-color: transparent;
-    color: #718096;
-    border: 1px solid #cbd5e0;
-    padding: 12px 30px;
-    border-radius: 30px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-top: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.btn-ghost:hover {
-    background-color: #f8f9fa;
-    border-color: #a0aec0;
-    color: #4a5568;
 }

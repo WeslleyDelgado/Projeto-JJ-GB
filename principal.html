@@ -8,34 +8,36 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://unpkg.com/html5-qrcode"></script>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#083e76">
+    <meta name="theme-color" content="#c53030">
 </head>
 <body>
 
     <div class="app-container">
-        <header class="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <header class="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <div>
-                <h1 style="margin-top: 0; font-size: 24px;">Olá, <br><span class="user-name" style="font-size: 28px;">[Aluno]</span></h1>
+                <h1 style="margin-top: 0; font-size: 24px; color: var(--cor-secundaria);">Olá, <br><span class="user-name" style="font-size: 28px;">[Aluno]</span></h1>
                 <span id="header-faixa" class="badge-faixa" style="display: none;"></span>
             </div>
-            <img id="header-foto-perfil" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Perfil" style="width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid #083e76;">
+            <img id="header-foto-perfil" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Perfil" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--cor-primaria); box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
         </header>
 
         <main class="scanner-section">
             <div class="scanner-box">
-                <p id="status">Aponte para o<br>QR Code da aula</p>
+                <p id="status" style="color: #4a5568; font-weight: 600;">Aponte para o<br>QR Code da aula</p>
                 
-                <div id="reader"></div>
+                <div class="scanner-frame">
+                    <div id="reader"></div>
+                </div>
 
-                <div id="result-message" style="display:none; margin: 15px; color: #276749; font-weight: bold;">
+                <div id="result-message" style="display:none; margin: 15px; color: #276749; font-weight: bold; padding: 12px 20px; background: #e6fffa; border-radius: 12px; border: 1px solid #b2f5ea;">
                     <i class="fa-solid fa-circle-check"></i> Presença Confirmada!
                 </div>
 
                 <button id="btn-scan" class="btn-capture" onclick="startScanner()">
-                    Iniciar Captura
+                    <i class="fa-solid fa-qrcode" style="margin-right: 8px;"></i> Iniciar Captura
                 </button>
 
-                <button id="btn-simulate" class="btn-capture" style="background-color: #4a5568; margin-top: 10px;" onclick="simulateScan()">
+                <button id="btn-simulate" class="btn-ghost" onclick="simulateScan()">
                     <i class="fa-solid fa-laptop"></i> Simular (Sem Câmera)
                 </button>
             </div>

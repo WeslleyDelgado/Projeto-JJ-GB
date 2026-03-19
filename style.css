@@ -11,13 +11,32 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    position: relative;
+    overflow: hidden; /* Evita que o desfoque crie barra de rolagem lateral */
+}
+
+/* Camada separada (atrás de tudo) para a imagem desfocada */
+body::before {
+    content: '';
+    position: absolute;
+    top: -15px; left: -15px; right: -15px; bottom: -15px; /* Estica um pouco para esconder as bordas borradas */
+    background-image: url('imagens/Imagem\ fundo.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(6px); /* ⬅️ Ajuste aqui a força do desfoque (tente 3px, 6px ou 10px) */
+    z-index: -1; /* Joga essa imagem pro fundo, atrás da caixinha branca */
 }
 
 .login-container {
     text-align: center;
     width: 100%;
     max-width: 350px;
-    padding: 20px;
+    padding: 40px 30px;
+    padding-bottom: calc(40px + env(safe-area-inset-bottom)); /* Proteção contra a barra do iPhone */
+    background-color: rgba(255, 255, 255, 0.95); /* Fundo branco levemente transparente para facilitar a leitura */
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Sombra suave para destacar a caixinha */
 }
 
 .logo img {
@@ -43,13 +62,13 @@ h1 {
     align-items: center;
     justify-content: center;
     padding: 12px;
-    border: none;
+    border: 1px solid #e0e0e0;
     border-radius: 4px;
     font-size: 16px;
     cursor: pointer;
-    background-color: #cfe2f3; /* Azul claro da imagem */
+    background-color: transparent;
     color: #000;
-    transition: background 0.3s;
+    transition: all 0.3s ease;
 }
 
 .btn i {
@@ -58,7 +77,8 @@ h1 {
 }
 
 .btn:hover {
-    background-color: #b8d4ed;
+    background-color: #f8f9fa;
+    border-color: #d1d5db;
 }
 
 .signup-text {
@@ -68,8 +88,9 @@ h1 {
 }
 
 .signup-text a {
-    color: #3182ce;
+    color: #c53030; /* Vermelho GB */
     text-decoration: none;
+    font-weight: bold;
 }
 
 .signup-text a:hover {
@@ -80,21 +101,39 @@ h1 {
 .login-form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: 1.5rem;
+    margin-bottom: 25px;
 }
 
 .input-group input {
     width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #cbd5e0;
+    padding: 14px 20px;
+    border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 16px;
     background-color: #fff;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #c53030;
+    box-shadow: 0 0 0 3px rgba(197, 48, 48, 0.1);
+}
+
+.forgot-password {
+    text-align: right;
+    margin-top: -0.8rem; /* Puxa para cima ignorando o gap de 1.5rem do form */
+}
+
+.forgot-password a {
+    color: #718096;
+    font-size: 13px;
+    text-decoration: none;
 }
 
 .btn-login-main {
-    background-color: #083e76; /* Azul Marinho padrão */
+    background-color: #c53030; /* Vermelho GB */
     color: white;
     border: none;
     padding: 14px;
@@ -102,11 +141,14 @@ h1 {
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(197, 48, 48, 0.2);
 }
 
 .btn-login-main:hover {
-    background-color: #062c54;
+    background-color: #9b2c2c; /* Vermelho GB Escuro */
+    box-shadow: 0 6px 15px rgba(197, 48, 48, 0.35);
+    transform: translateY(-1px);
 }
 
 .divider {
@@ -125,8 +167,3 @@ h1 {
 
 .divider:not(:empty)::before { margin-right: .5em; }
 .divider:not(:empty)::after { margin-left: .5em; }
-
-.btn.google, .btn.apple {
-    background-color: #e2e8f0;
-    font-weight: 500;
-}
