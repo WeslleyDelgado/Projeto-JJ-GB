@@ -17,6 +17,16 @@
         th { background-color: #083e76; color: white; }
         .badge { background: #e2e8f0; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; }
         select.faixa-select { padding: 8px; border-radius: 5px; border: 1px solid #cbd5e0; background: #fff; cursor: pointer; font-weight: bold; }
+        
+        /* Estilos do Modal de Perfil */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); align-items: center; justify-content: center; backdrop-filter: blur(3px); }
+        .modal-content { background-color: #fff; padding: 30px 25px; border-radius: 12px; width: 90%; max-width: 350px; text-align: center; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .close-btn { position: absolute; top: 15px; right: 15px; font-size: 20px; cursor: pointer; color: #718096; transition: color 0.3s; }
+        .close-btn:hover { color: #c53030; }
+        .perfil-foto { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #c53030; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .perfil-info { text-align: left; margin-top: 20px; background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .perfil-info p { margin-bottom: 10px; font-size: 14px; color: #4a5568; display: flex; align-items: center; gap: 10px; }
+        .perfil-info strong { color: #2d3748; }
     </style>
 </head>
 <body>
@@ -49,7 +59,61 @@
                 <tbody id="tabela-corpo"></tbody>
             </table>
         </div>
+
+        <!-- Controles de Paginação -->
+        <div id="pagination-controls" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+            <button id="btn-prev" onclick="mudarPagina(-1)" style="padding: 10px 15px; border: none; background-color: #083e76; color: white; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.3s ease;"><i class="fa-solid fa-chevron-left"></i> Anterior</button>
+            <span id="page-info" style="font-size: 15px; color: #4a5568; font-weight: bold;">Página 1 de 1</span>
+            <button id="btn-next" onclick="mudarPagina(1)" style="padding: 10px 15px; border: none; background-color: #083e76; color: white; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.3s ease;">Próxima <i class="fa-solid fa-chevron-right"></i></button>
+        </div>
     </div>
+
+    <!-- Modal de Perfil do Aluno -->
+    <div id="modal-perfil" class="modal">
+        <div class="modal-content">
+            <i class="fa-solid fa-xmark close-btn" onclick="fecharPerfil()"></i>
+            <img id="modal-foto" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" class="perfil-foto" alt="Foto do Aluno">
+            <h2 id="modal-nome" style="color: #2d3748; margin-bottom: 5px; font-size: 22px;">Nome do Aluno</h2>
+            <span id="modal-faixa-badge" class="badge-faixa" style="display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 5px;">Faixa</span>
+            
+            <div class="perfil-info">
+                <p><i class="fa-solid fa-envelope" style="color: #718096; width: 16px;"></i> <span id="modal-email">email@teste.com</span></p>
+                <p><i class="fa-solid fa-location-dot" style="color: #718096; width: 16px;"></i> <strong id="modal-unidade">Unidade</strong></p>
+                <p><i class="fa-solid fa-dumbbell" style="color: #718096; width: 16px;"></i> <strong id="modal-presencas">0</strong> presenças totais</p>
+            </div>
+            
+            <button onclick="abrirEditar()" style="width: 100%; margin-top: 15px; padding: 12px; background-color: #e2e8f0; color: #2d3748; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s;"><i class="fa-solid fa-pen"></i> Editar Dados</button>
+        </div>
+    </div>
+
+    <!-- Modal de Edição de Aluno -->
+    <div id="modal-editar" class="modal">
+        <div class="modal-content" style="text-align: left;">
+            <i class="fa-solid fa-xmark close-btn" onclick="fecharEditar()"></i>
+            <h2 style="color: #2d3748; margin-bottom: 20px; font-size: 20px;"><i class="fa-solid fa-user-pen"></i> Editar Aluno</h2>
+            
+            <form id="form-editar-aluno">
+                <input type="hidden" id="edit-aluno-id">
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; color: #4a5568;">Nome Completo</label>
+                    <input type="text" id="edit-aluno-nome" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 5px; font-size: 14px; outline: none;" required>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; color: #4a5568;">E-mail</label>
+                    <input type="email" id="edit-aluno-email" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 5px; font-size: 14px; outline: none;" required>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; color: #4a5568;">Unidade</label>
+                    <select id="edit-aluno-unidade" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 5px; font-size: 14px; outline: none;" required>
+                        <option value="gb-matriz">Gracie Barra Centro</option>
+                        <option value="gb-local">Gracie Barra Rio</option>
+                    </select>
+                </div>
+                <button type="submit" id="btn-salvar-edicao" style="width: 100%; padding: 12px; background-color: #083e76; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s;">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+
     <script src="config.js"></script>
     <script src="script-admin-alunos.js"></script>
 </body>

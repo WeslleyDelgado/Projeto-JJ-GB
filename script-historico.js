@@ -17,6 +17,19 @@ window.onload = function() {
     })
     .then(response => response.json())
     .then(historico => {
+        if (historico.erro) {
+            alert(historico.erro);
+            // Expulsa o usuário apenas se for erro de autenticação
+            if (historico.erro.includes("Token") || historico.erro.includes("Acesso negado") || historico.erro.includes("não encontrado")) {
+                localStorage.removeItem('auth_token');
+                window.location.href = "index.html";
+            }
+            return;
+        }
+        
+        // Se não for um array, não podemos usar o .reverse(), então verificamos:
+        if (!Array.isArray(historico)) return;
+
         if (historico.length > 0) {
             listaContainer.innerHTML = ''; // Limpa o "Vazio"
             
@@ -35,6 +48,8 @@ window.onload = function() {
                 `;
                 listaContainer.innerHTML += card;
             });
+        } else {
+            listaContainer.innerHTML = '<div class="empty-state">Nenhuma presença registrada ainda. Vá treinar! 🥋</div>';
         }
     })
     .catch(error => {

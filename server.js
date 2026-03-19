@@ -142,8 +142,13 @@ function verificarTokenAdmin(req, res, next) {
 app.post('/api/presencas', verificarToken, async (req, res) => {
     try {
         const { aula } = req.body;
-        const dataAtual = new Date().toLocaleString('pt-BR');
-        const dataHoje = new Date().toLocaleDateString('pt-BR'); // Pegamos apenas o dia atual (ex: 25/10/2023)
+        
+        // Força o fuso horário do Brasil (Garante que aulas à noite não caiam no dia seguinte no servidor UTC)
+        const opcoesData = { timeZone: 'America/Sao_Paulo' };
+        const dataLocal = new Date();
+        
+        const dataAtual = dataLocal.toLocaleString('pt-BR', opcoesData);
+        const dataHoje = dataLocal.toLocaleDateString('pt-BR', opcoesData); 
         
         // 1. Verifica se já existe uma presença deste aluno no dia de hoje
         const verificacao = await pool.query(
@@ -200,7 +205,7 @@ app.get('/api/admin/presencas', verificarTokenAdmin, async (req, res) => {
 app.get('/api/admin/alunos', verificarTokenAdmin, async (req, res) => {
     try {
         const query = `
-            SELECT id, nome, unidade, faixa, 
+            SELECT id, nome, email, unidade, faixa, foto_perfil, 
                    (SELECT COUNT(*) FROM presencas p WHERE p.usuario_id = u.id) as total_presencas 
             FROM usuarios u 
             ORDER BY nome ASC
@@ -226,6 +231,27 @@ app.put('/api/admin/alunos/:id/faixa', verificarTokenAdmin, async (req, res) => 
         res.json({ mensagem: "Faixa atualizada com sucesso!" });
     } catch (erro) {
         console.error("Erro ao atualizar faixa do aluno:", erro);
+        res.status(500).json({ erro: "Erro interno no servidor." });
+    }
+});
+
+// Rota para o Administrador editar os dados do aluno (Nome, E-mail, Unidade)
+app.put('/api/admin/alunos/:id', verificarTokenAdmin, async (req, res) => {
+    try {
+        const { nome, email, unidade } = req.body;
+        const alunoId = req.params.id;
+        
+        await pool.query(
+            'UPDATE usuarios SET nome = $1, email = $2, unidade = $3 WHERE id = $4',
+            [nome, email, unidade, alunoId]
+        );
+        res.json({ mensagem: "Dados do aluno atualizados com sucesso!" });
+    } catch (erro) {
+        console.error("Erro ao atualizar aluno:", erro);
+        // Código 23505 do PostgreSQL significa "Violação de Unicidade" (E-mail já existe)
+        if (erro.code === '23505') {
+            return res.status(400).json({ erro: "Este e-mail já está em uso por outro aluno." });
+        }
         res.status(500).json({ erro: "Erro interno no servidor." });
     }
 });

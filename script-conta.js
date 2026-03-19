@@ -26,6 +26,10 @@ window.onload = function() {
     .then(usuario => {
         if (usuario.erro) {
             alert(usuario.erro);
+            if (usuario.erro.includes("Token") || usuario.erro.includes("Acesso negado") || usuario.erro.includes("não encontrado")) {
+                localStorage.removeItem('auth_token'); // Limpa a sujeira apenas se for erro de autenticação
+                window.location.href = "index.html"; // Redireciona para login
+            }
         } else {
             inputNome.value = usuario.nome;
             inputEmail.value = usuario.email;

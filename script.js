@@ -13,6 +13,15 @@ window.onload = function() {
         })
         .then(response => response.json())
         .then(usuario => {
+            if (usuario.erro) {
+                console.warn("Sessão inválida:", usuario.erro);
+                if (usuario.erro.includes("Token") || usuario.erro.includes("Acesso negado") || usuario.erro.includes("não encontrado")) {
+                    localStorage.removeItem('auth_token');
+                    window.location.href = "index.html";
+                }
+                return; // Interrompe a execução para não quebrar o script
+            }
+
             if (usuario.foto_perfil && document.getElementById('header-foto-perfil')) {
                 document.getElementById('header-foto-perfil').src = usuario.foto_perfil;
             }
