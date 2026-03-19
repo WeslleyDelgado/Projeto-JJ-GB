@@ -10,9 +10,11 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh; /* Permite crescer se o teclado aparecer */
+    min-height: 100dvh; /* Medida dinâmica moderna para celulares */
     position: relative;
-    overflow: hidden; /* Evita que o desfoque crie barra de rolagem lateral */
+    overflow-x: hidden; /* Evita apenas a rolagem lateral do desfoque */
+    overflow-y: auto; /* Libera a rolagem vertical quando necessário */
 }
 
 /* Camada separada (atrás de tudo) para a imagem desfocada */
@@ -34,6 +36,7 @@ body::before {
     max-width: 350px;
     padding: 40px 30px;
     padding-bottom: calc(40px + env(safe-area-inset-bottom)); /* Proteção contra a barra do iPhone */
+    margin: 20px; /* Garante que a caixinha não cole nas laterais em telas minúsculas */
     background-color: rgba(255, 255, 255, 0.95); /* Fundo branco levemente transparente para facilitar a leitura */
     border-radius: 12px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Sombra suave para destacar a caixinha */

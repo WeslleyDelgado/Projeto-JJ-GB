@@ -6,7 +6,8 @@ const bcrypt = require('bcrypt');
 const { Pool } = require('pg');
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: '10mb' })); // Aumenta o limite de dados para aceitar fotos em Base64
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(cors()); // Permite que seu frontend HTML se comunique com esta API
 
 const SECRET_KEY = process.env.SECRET_KEY; 
