@@ -58,7 +58,8 @@ globalThis.onload = function() {
         const paginaDados = alunosFiltrados.slice(startIndex, endIndex);
 
         paginaDados.forEach(aluno => {
-            const nomeUnidade = aluno.unidade === 'gb-matriz' ? 'Centro' : 'Rio';
+            const mapUnidade = { 'cascatinha': 'Cascatinha', 'benfica': 'Benfica', 'centro': 'Centro', 'gb-matriz': 'Centro (Legado)', 'gb-local': 'Rio (Legado)' };
+            const nomeUnidade = mapUnidade[aluno.unidade] || aluno.unidade;
             const faixaAtual = aluno.faixa || ''; // Vazio significa Automático
             
             const tr = document.createElement('tr');
@@ -123,7 +124,8 @@ globalThis.onload = function() {
 
         document.getElementById('modal-nome').innerText = aluno.nome;
         document.getElementById('modal-matricula').innerText = String(aluno.id).padStart(5, '0');
-        document.getElementById('modal-unidade').innerText = aluno.unidade === 'gb-matriz' ? 'Gracie Barra Centro' : 'Gracie Barra Rio';
+        const mapUnidade = { 'cascatinha': 'Cascatinha', 'benfica': 'Benfica', 'centro': 'Centro', 'gb-matriz': 'Centro (Legado)', 'gb-local': 'Rio (Legado)' };
+        document.getElementById('modal-unidade').innerText = mapUnidade[aluno.unidade] || aluno.unidade;
         document.getElementById('modal-presencas').innerText = aluno.total_presencas;
         
         const foto = aluno.foto_perfil || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';

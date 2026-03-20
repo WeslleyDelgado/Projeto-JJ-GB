@@ -33,7 +33,8 @@ globalThis.onload = function() {
         }
 
         dados.forEach(item => {
-            const nomeUnidade = item.unidade === 'gb-matriz' ? 'Centro' : 'Rio';
+            const mapUnidade = { 'cascatinha': 'Cascatinha', 'benfica': 'Benfica', 'centro': 'Centro', 'gb-matriz': 'Centro (Legado)', 'gb-local': 'Rio (Legado)' };
+            const nomeUnidade = mapUnidade[item.unidade] || item.unidade;
             
             const tr = document.createElement('tr');
             tr.innerHTML = `

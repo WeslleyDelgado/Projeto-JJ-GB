@@ -68,11 +68,13 @@ function carregarAulas() {
             const isPassada = dataObj < new Date();
             const corLinha = isPassada ? 'color: #a0aec0;' : '';
 
+            const mapUnidade = { 'cascatinha': 'Cascatinha', 'benfica': 'Benfica', 'centro': 'Centro', 'gb-matriz': 'Centro (Legado)', 'gb-local': 'Rio (Legado)' };
+
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td style="${corLinha}"><strong>${dataFormatada}</strong> às ${horaFormatada}</td>
                 <td style="${corLinha}">${aula.titulo}</td>
-                <td style="${corLinha}"><span class="badge">${aula.unidade === 'gb-matriz' ? 'Centro' : 'Rio'}</span></td>
+                <td style="${corLinha}"><span class="badge">${mapUnidade[aula.unidade] || aula.unidade}</span></td>
                 <td style="font-weight: bold; color: ${aula.vagas_ocupadas >= aula.limite_vagas ? '#c53030' : '#276749'};">
                     ${aula.vagas_ocupadas} / ${aula.limite_vagas}
                 </td>

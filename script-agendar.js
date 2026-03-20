@@ -42,11 +42,14 @@ function carregarAulas() {
                 btnHTML = `<button class="btn-reservar" onclick="reservarVaga(${aula.id})"><i class="fa-solid fa-check"></i> Reservar Vaga</button>`;
             }
 
+            const mapUnidade = { 'cascatinha': 'Cascatinha', 'benfica': 'Benfica', 'centro': 'Centro', 'gb-matriz': 'Centro (Legado)', 'gb-local': 'Rio (Legado)' };
+            const nomeUnidade = mapUnidade[aula.unidade] || aula.unidade;
+
             const card = `
                 <div class="aula-card">
                     <div class="aula-header">
                         <div class="aula-title">${aula.titulo}</div>
-                        <div class="aula-unidade">${aula.unidade === 'gb-matriz' ? 'GB Centro' : 'GB Rio'}</div>
+                        <div class="aula-unidade">${nomeUnidade}</div>
                     </div>
                     <div class="aula-info"><i class="fa-regular fa-calendar"></i> <span style="text-transform: capitalize;">${dataFormatada}</span> às ${horaFormatada}</div>
                     <div class="aula-info ${lotado ? 'vagas-esgotadas' : 'vagas-disponiveis'}"><i class="fa-solid fa-users"></i> ${ocupadas}/${limite} vagas preenchidas</div>
