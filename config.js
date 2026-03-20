@@ -1,5 +1,7 @@
 // Arquivo de configuração global
-const API_BASE_URL = 'https://projeto-jj-gb.onrender.com'; // Sem a barra / no final
+
+// const API_BASE_URL = 'http://localhost:3000'; // Descomente esta linha para testar LOCALMENTE
+const API_BASE_URL = 'https://projeto-jj-gb.onrender.com'; // Produção (Render)
 
 // Registra o Service Worker para tornar o app instalável (PWA)
 if ('serviceWorker' in navigator) {

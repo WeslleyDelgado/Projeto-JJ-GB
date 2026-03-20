@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerar Aula - Admin Gracie Barra</title>
+    <link rel="stylesheet" href="style-principal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body { background-color: #f4f4f4; display: block; height: auto; }
+        .admin-container { max-width: 900px; margin: 40px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <header style="display: flex; align-items: center; gap: 15px; margin-bottom: 30px;">
+            <button id="btn-sair-admin" style="background: none; border: none; color: #c53030; font-size: 24px; cursor: pointer; padding: 0;" title="Sair do Painel"><i class="fa-solid fa-right-from-bracket"></i></button>
+            <div>
+                <h1 style="margin: 0; color: #333; font-size: 24px;">Painel <span class="user-name">Administrativo</span></h1>
+                <p style="color: #718096; font-size: 14px; margin: 0;">Geração de QR Code para Turmas</p>
+            </div>
+        </header>
+
+        <div style="display: flex; gap: 10px; margin-bottom: 30px;">
+            <a href="admin.html" style="flex: 1; text-align: center; background-color: #e2e8f0; color: #2d3748; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold;">Histórico</a>
+            <a href="admin-alunos.html" style="flex: 1; text-align: center; background-color: #e2e8f0; color: #2d3748; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold;">Alunos</a>
+            <a href="admin-aula.html" style="flex: 1; text-align: center; background-color: #c53030; color: white; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold;">Gerar Aula</a>
+            <a href="admin-agendamento.html" style="flex: 1; text-align: center; background-color: #e2e8f0; color: #2d3748; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold;">Agenda</a>
+        </div>
+
+        <!-- Área Central de Geração -->
+        <div style="background: #f8f9fa; padding: 30px; border-radius: 12px; border: 1px solid #e2e8f0; text-align: center;">
+            <h2 style="color: #2d3748; margin-bottom: 20px;"><i class="fa-solid fa-qrcode" style="color: #c53030;"></i> Iniciar Nova Aula</h2>
+            
+            <div style="max-width: 400px; margin: 0 auto 20px;">
+                <label style="display: block; text-align: left; font-weight: bold; margin-bottom: 8px; color: #4a5568;">Selecione a Turma Atual:</label>
+                <select id="aula-select" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e0; font-size: 16px; outline: none; margin-bottom: 15px; cursor: pointer;">
+                    <option value="">-- Escolha a Aula --</option>
+                    <option value="Jiu-Jitsu Iniciantes">Jiu-Jitsu Iniciantes (GB1)</option>
+                    <option value="Jiu-Jitsu Avançado">Jiu-Jitsu Avançado (GB2/GB3)</option>
+                    <option value="Jiu-Jitsu Kids">Jiu-Jitsu Kids</option>
+                    <option value="No-Gi (Sem Kimono)">No-Gi (Sem Kimono)</option>
+                    <option value="Defesa Pessoal">Defesa Pessoal</option>
+                    <option value="Open Mat">Open Mat</option>
+                </select>
+                
+                <button onclick="gerarQRCode()" style="width: 100%; padding: 15px; background-color: #c53030; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(197, 48, 48, 0.2);">
+                    Gerar QR Code na Tela
+                </button>
+            </div>
+
+            <!-- O QR Code vai aparecer aqui -->
+            <div id="qr-instrucoes" style="display: none; margin-top: 30px;">
+                <hr style="border: 0; border-top: 1px solid #cbd5e0; margin-bottom: 30px;">
+                
+                <h3 id="aula-titulo" style="color: #c53030; margin-bottom: 15px; font-size: 26px;"></h3>
+                
+                <div style="display: inline-block; padding: 25px; background: white; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 2px dashed #cbd5e0;">
+                    <img id="qr-code-img" src="" alt="QR Code da Aula" style="width: 350px; height: 350px; display: none; margin: 0 auto;">
+                </div>
+                
+                <p style="color: #4a5568; font-size: 18px; margin-top: 25px; font-weight: bold;">
+                    <i class="fa-solid fa-mobile-screen-button"></i> Alunos, apontem a câmera do app para registrar presença!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="script-admin-aula.js"></script>
+</body>
+</html>

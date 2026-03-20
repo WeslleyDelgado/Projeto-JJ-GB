@@ -444,3 +444,91 @@ body {
     color: #4a5568;
     font-weight: 600;
 }
+
+/* --- Timeline de Graduação --- */
+.timeline-container {
+    border-left: 2px solid #e2e8f0;
+    padding-left: 15px;
+    margin-top: 15px;
+    margin-left: 5px;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 15px;
+    font-size: 13px;
+    color: #4a5568;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -21px;
+    top: 4px;
+    width: 10px;
+    height: 10px;
+    background: var(--cor-primaria);
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px var(--cor-primaria);
+}
+
+/* --- Aba de Agendamento --- */
+.aula-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.aula-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.aula-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--cor-secundaria);
+}
+.aula-unidade {
+    font-size: 12px;
+    background: #e2e8f0;
+    padding: 3px 8px;
+    border-radius: 10px;
+    color: #4a5568;
+}
+.aula-info {
+    font-size: 14px;
+    color: #4a5568;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.vagas-disponiveis { color: #276749; font-weight: 600; }
+.vagas-esgotadas { color: #c53030; font-weight: 600; }
+.btn-reservar {
+    background-color: var(--cor-primaria);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.btn-reservar:disabled { background-color: #cbd5e0; cursor: not-allowed; }
+.btn-reservar:hover:not(:disabled) { background-color: var(--cor-primaria-hover); }
+.btn-cancelar {
+    background-color: transparent;
+    color: var(--cor-primaria);
+    border: 1px solid var(--cor-primaria);
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}

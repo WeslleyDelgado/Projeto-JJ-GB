@@ -221,17 +221,44 @@ app.get('/api/admin/alunos', verificarTokenAdmin, async (req, res) => {
 // Rota para o Administrador alterar a faixa de um aluno
 app.put('/api/admin/alunos/:id/faixa', verificarTokenAdmin, async (req, res) => {
     try {
-        const { faixa } = req.body;
+        const { faixa, promovidoPor } = req.body;
         const alunoId = req.params.id;
         
         // Se vier vazio (""), gravamos como null no banco (modo automático)
         const valorFaixa = faixa === "" ? null : faixa;
         
         await pool.query('UPDATE usuarios SET faixa = $1 WHERE id = $2', [valorFaixa, alunoId]);
+
+        // Grava no histórico se não for automático
+        if (valorFaixa) {
+            const mestre = promovidoPor || 'Administrador';
+            try {
+                await pool.query('INSERT INTO historico_graduacao (usuario_id, faixa, promovido_por) VALUES ($1, $2, $3)', [alunoId, valorFaixa, mestre]);
+            } catch(e) {
+                console.warn("Aviso: Tabela historico_graduacao não existe no banco.", e.message);
+            }
+        }
+
         res.json({ mensagem: "Faixa atualizada com sucesso!" });
     } catch (error_) {
         console.error("Erro ao atualizar faixa do aluno:", error_);
         res.status(500).json({ erro: "Erro interno no servidor." });
+    }
+});
+
+// Rota para buscar o histórico de graduação do aluno
+app.get('/api/admin/alunos/:id/graduacao', verificarTokenAdmin, async (req, res) => {
+    try {
+        const alunoId = req.params.id;
+        let historico = [];
+        try {
+            const result = await pool.query('SELECT faixa, promovido_por, data FROM historico_graduacao WHERE usuario_id = $1 ORDER BY data DESC', [alunoId]);
+            historico = result.rows;
+        } catch(e) {} // Fallback se a tabela ainda não foi criada
+        
+        res.json(historico);
+    } catch (error) {
+        res.status(500).json({ erro: "Erro ao buscar histórico." });
     }
 });
 
@@ -350,6 +377,113 @@ app.put('/api/usuario', verificarToken, async (req, res) => {
         res.json({ mensagem: "Dados atualizados com sucesso!", usuario: updateResult.rows[0] });
     } catch (error_) {
         console.error("Erro ao atualizar dados:", error_);
+        res.status(500).json({ erro: "Erro interno no servidor." });
+    }
+});
+
+// ==========================================
+// SISTEMA DE AGENDAMENTO DE AULAS
+// ==========================================
+
+// Admin: Criar uma nova aula na agenda
+app.post('/api/admin/aulas-programadas', verificarTokenAdmin, async (req, res) => {
+    try {
+        const { titulo, dataHora, limiteVagas, unidade } = req.body;
+        const resultado = await pool.query(
+            'INSERT INTO aulas_programadas (titulo, data_hora, limite_vagas, unidade) VALUES ($1, $2, $3, $4) RETURNING *',
+            [titulo, dataHora, limiteVagas, unidade]
+        );
+        res.status(201).json({ mensagem: "Aula programada com sucesso!", aula: resultado.rows[0] });
+    } catch (error) {
+        console.error("Erro ao criar aula programada:", error);
+        res.status(500).json({ erro: "Erro interno no servidor." });
+    }
+});
+
+// Admin: Buscar todas as aulas programadas (para gerenciamento)
+app.get('/api/admin/aulas-programadas', verificarTokenAdmin, async (req, res) => {
+    try {
+        const query = `
+            SELECT ap.*, 
+                   (SELECT COUNT(*) FROM agendamentos ag WHERE ag.aula_id = ap.id) as vagas_ocupadas
+            FROM aulas_programadas ap
+            ORDER BY ap.data_hora DESC
+        `;
+        const resultado = await pool.query(query);
+        res.json(resultado.rows);
+    } catch (error) {
+        res.status(500).json({ erro: "Erro interno no servidor." });
+    }
+});
+
+// Admin: Deletar uma aula programada
+app.delete('/api/admin/aulas-programadas/:id', verificarTokenAdmin, async (req, res) => {
+    try {
+        await pool.query('DELETE FROM aulas_programadas WHERE id = $1', [req.params.id]);
+        res.json({ mensagem: "Aula removida com sucesso!" });
+    } catch (error) {
+        res.status(500).json({ erro: "Erro interno no servidor." });
+    }
+});
+
+// Todos: Buscar aulas programadas futuras com contagem de vagas
+app.get('/api/aulas-programadas', verificarToken, async (req, res) => {
+    try {
+        // Retorna aulas a partir de hoje e conta quantos agendamentos existem
+        const query = `
+            SELECT ap.*, 
+                   (SELECT COUNT(*) FROM agendamentos ag WHERE ag.aula_id = ap.id) as vagas_ocupadas,
+                   EXISTS(SELECT 1 FROM agendamentos ag WHERE ag.aula_id = ap.id AND ag.usuario_id = $1) as ja_agendado
+            FROM aulas_programadas ap
+            WHERE ap.data_hora >= CURRENT_DATE
+            ORDER BY ap.data_hora ASC
+        `;
+        const resultado = await pool.query(query, [req.usuarioId]);
+        res.json(resultado.rows);
+    } catch (error) {
+        console.error("Erro ao buscar aulas programadas:", error);
+        res.status(500).json({ erro: "Erro interno no servidor." });
+    }
+});
+
+// Aluno: Fazer um agendamento
+app.post('/api/agendamentos', verificarToken, async (req, res) => {
+    try {
+        const { aulaId } = req.body;
+        
+        // 1. Verifica se a aula existe e se tem vaga
+        const aulaResult = await pool.query('SELECT limite_vagas FROM aulas_programadas WHERE id = $1', [aulaId]);
+        if (aulaResult.rows.length === 0) return res.status(404).json({ erro: "Aula não encontrada." });
+        const limite = aulaResult.rows[0].limite_vagas;
+
+        const ocupadasResult = await pool.query('SELECT COUNT(*) as count FROM agendamentos WHERE aula_id = $1', [aulaId]);
+        const ocupadas = parseInt(ocupadasResult.rows[0].count);
+
+        if (ocupadas >= limite) {
+            return res.status(400).json({ erro: "Esta aula já está com a capacidade máxima." });
+        }
+
+        // 2. Realiza o agendamento (o UNIQUE constraint vai barrar agendamentos duplicados)
+        await pool.query('INSERT INTO agendamentos (usuario_id, aula_id) VALUES ($1, $2)', [req.usuarioId, aulaId]);
+        
+        res.status(201).json({ mensagem: "Vaga reservada com sucesso!" });
+    } catch (error) {
+        console.error("Erro ao agendar:", error);
+        if (error.code === '23505') { // Código do Postgres para Violação de Unicidade
+            return res.status(400).json({ erro: "Você já está agendado para esta aula." });
+        }
+        res.status(500).json({ erro: "Erro interno no servidor." });
+    }
+});
+
+// Aluno: Cancelar um agendamento
+app.delete('/api/agendamentos/:aulaId', verificarToken, async (req, res) => {
+    try {
+        const { aulaId } = req.params;
+        await pool.query('DELETE FROM agendamentos WHERE usuario_id = $1 AND aula_id = $2', [req.usuarioId, aulaId]);
+        res.json({ mensagem: "Reserva cancelada com sucesso." });
+    } catch (error) {
+        console.error("Erro ao cancelar agendamento:", error);
         res.status(500).json({ erro: "Erro interno no servidor." });
     }
 });

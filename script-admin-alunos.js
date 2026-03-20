@@ -65,21 +65,12 @@ globalThis.onload = function() {
             tr.innerHTML = `
                 <td style="font-weight: bold;">
                     <button onclick="abrirPerfil(${aluno.id})" style="background: none; border: none; color: #c53030; font-size: 16px; font-weight: bold; cursor: pointer; padding: 0; display: flex; align-items: center; gap: 8px;" title="Ver Perfil Completo">
-                        <i class="fa-regular fa-id-card"></i> ${aluno.nome}
+                    <i class="fa-solid fa-user-graduate"></i> ${aluno.nome}
                     </button>
                 </td>
                 <td><span class="badge">${nomeUnidade}</span></td>
                 <td style="font-weight: bold; text-align: center;">${aluno.total_presencas}</td>
-                <td>
-                    <select class="faixa-select" onchange="mudarFaixa(${aluno.id}, this.value)">
-                        <option value="" ${faixaAtual === '' ? 'selected' : ''}>🤖 Automático</option>
-                        <option value="Branca" ${faixaAtual === 'Branca' ? 'selected' : ''}>Branca</option>
-                        <option value="Azul" ${faixaAtual === 'Azul' ? 'selected' : ''}>Azul</option>
-                        <option value="Roxa" ${faixaAtual === 'Roxa' ? 'selected' : ''}>Roxa</option>
-                        <option value="Marrom" ${faixaAtual === 'Marrom' ? 'selected' : ''}>Marrom</option>
-                        <option value="Preta" ${faixaAtual === 'Preta' ? 'selected' : ''}>Preta</option>
-                    </select>
-                </td>
+            <td><button onclick="abrirPromocao(${aluno.id})" style="background: #e2e8f0; color: #2d3748; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px;"><i class="fa-solid fa-medal"></i> Promover</button></td>
             `;
             tbody.appendChild(tr);
         });
@@ -117,14 +108,6 @@ globalThis.onload = function() {
         }
     };
 
-    globalThis.mudarFaixa = function(id, novaFaixa) {
-        fetch(`${API_BASE_URL}/api/admin/alunos/${id}/faixa`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json', 'Authorization': token },
-            body: JSON.stringify({ faixa: novaFaixa })
-        }).catch(err => alert("Erro ao salvar!"));
-    };
-
     document.getElementById('search-input').addEventListener('input', function(e) {
         const termo = e.target.value.toLowerCase();
         alunosFiltrados = todosAlunos.filter(item => item.nome.toLowerCase().includes(termo));
@@ -139,12 +122,16 @@ globalThis.onload = function() {
         alunoSelecionado = aluno;
 
         document.getElementById('modal-nome').innerText = aluno.nome;
-        document.getElementById('modal-email').innerText = aluno.email || 'Não informado';
+        document.getElementById('modal-matricula').innerText = String(aluno.id).padStart(5, '0');
         document.getElementById('modal-unidade').innerText = aluno.unidade === 'gb-matriz' ? 'Gracie Barra Centro' : 'Gracie Barra Rio';
         document.getElementById('modal-presencas').innerText = aluno.total_presencas;
         
         const foto = aluno.foto_perfil || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
         document.getElementById('modal-foto').src = foto;
+        
+        // Gera o QR Code visual com uma API pública baseada no ID do Aluno
+        const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Aula_${aluno.id}`;
+        document.getElementById('modal-qr').src = qrCodeUrl;
 
         const faixaAtual = aluno.faixa || 'Branca';
         const faixasInfo = {
@@ -160,6 +147,26 @@ globalThis.onload = function() {
         badge.style.backgroundColor = info.bg;
         badge.style.color = info.text;
         badge.style.border = `1px solid ${info.border}`;
+
+        // Busca Timeline do backend
+        document.getElementById('modal-timeline').innerHTML = '<span style="font-size:12px; color:#a0aec0;">Carregando...</span>';
+        fetch(`${API_BASE_URL}/api/admin/alunos/${aluno.id}/graduacao`, { headers: { 'Authorization': token } })
+        .then(res => res.json())
+        .then(historico => {
+            const timelineDiv = document.getElementById('modal-timeline');
+            if (!historico || historico.length === 0) {
+                timelineDiv.innerHTML = '<div class="timeline-item">Nenhuma promoção registrada manualmente.</div>';
+                document.getElementById('modal-presencas-recentes').innerText = aluno.total_presencas; // Se não tem histórico, todas são recentes
+            } else {
+                timelineDiv.innerHTML = historico.map(h => `
+                    <div class="timeline-item">
+                        <strong>Faixa ${h.faixa}</strong><br>
+                        <small style="color: #a0aec0;">Por ${h.promovido_por} em ${new Date(h.data).toLocaleDateString('pt-BR')}</small>
+                    </div>
+                `).join('');
+                document.getElementById('modal-presencas-recentes').innerText = Math.floor(aluno.total_presencas * 0.3); // Exemplo visual até contarmos via banco
+            }
+        }).catch(() => { document.getElementById('modal-timeline').innerHTML = '<div class="timeline-item">Erro ao carregar linha do tempo.</div>'; });
 
         document.getElementById('modal-perfil').style.display = 'flex'; // Exibe o modal
     };
@@ -183,6 +190,38 @@ globalThis.onload = function() {
 
     globalThis.fecharEditar = function() {
         document.getElementById('modal-editar').style.display = 'none';
+    };
+
+    // --- Funções de Promoção ---
+    globalThis.abrirPromocao = function(id) {
+        const aluno = todosAlunos.find(a => a.id === id);
+        if (!aluno) return;
+        alunoSelecionado = aluno;
+        
+        document.getElementById('promo-mestre').value = '';
+        document.getElementById('modal-promover').style.display = 'flex';
+    };
+
+    globalThis.fecharPromover = function() {
+        document.getElementById('modal-promover').style.display = 'none';
+    };
+
+    globalThis.confirmarPromocao = function() {
+        const novaFaixa = document.getElementById('promo-faixa').value;
+        const mestre = document.getElementById('promo-mestre').value;
+        
+        if (!mestre) { alert("Informe o nome do mestre!"); return; }
+
+        fetch(`${API_BASE_URL}/api/admin/alunos/${alunoSelecionado.id}/faixa`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'Authorization': token },
+            body: JSON.stringify({ faixa: novaFaixa, promovidoPor: mestre })
+        })
+        .then(() => {
+            alert(`Aluno promovido para a Faixa ${novaFaixa} com sucesso!`);
+            fecharPromover();
+            carregarDados();
+        }).catch(() => alert("Erro ao promover aluno!"));
     };
 
     globalThis.excluirAluno = function() {

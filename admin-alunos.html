@@ -27,6 +27,8 @@
         .perfil-info { text-align: left; margin-top: 20px; background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; }
         .perfil-info p { margin-bottom: 10px; font-size: 14px; color: #4a5568; display: flex; align-items: center; gap: 10px; }
         .perfil-info strong { color: #2d3748; }
+        .qr-container { text-align: center; margin: 15px 0; background: #fff; padding: 10px; border-radius: 8px; border: 1px dashed #cbd5e0; }
+        .qr-container img { width: 120px; height: 120px; margin: 0 auto; }
     </style>
 </head>
 <body>
@@ -40,8 +42,10 @@
         </header>
 
         <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-            <a href="admin.html" style="flex: 1; text-align: center; background-color: #e2e8f0; color: #2d3748; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold;">Histórico de Aulas</a>
-            <a href="admin-alunos.html" style="flex: 1; text-align: center; background-color: #c53030; color: white; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold;">Gerenciar Faixas</a>
+            <a href="admin.html" style="flex: 1; text-align: center; background-color: #e2e8f0; color: #2d3748; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold;">Histórico</a>
+            <a href="admin-alunos.html" style="flex: 1; text-align: center; background-color: #c53030; color: white; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold;">Alunos</a>
+            <a href="admin-aula.html" style="flex: 1; text-align: center; background-color: #e2e8f0; color: #2d3748; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold;">Gerar Aula</a>
+            <a href="admin-agendamento.html" style="flex: 1; text-align: center; background-color: #e2e8f0; color: #2d3748; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold;">Agenda</a>
         </div>
 
         <input type="text" id="search-input" class="search-bar" placeholder="🔍 Buscar por aluno ou unidade...">
@@ -53,7 +57,7 @@
                         <th>Aluno</th>
                         <th>Unidade</th>
                         <th>Total Presenças</th>
-                        <th>Ajustar Faixa</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody id="tabela-corpo"></tbody>
@@ -72,19 +76,58 @@
     <div id="modal-perfil" class="modal">
         <div class="modal-content">
             <button class="close-btn" onclick="fecharPerfil()" aria-label="Fechar Perfil"><i class="fa-solid fa-xmark"></i></button>
-            <img id="modal-foto" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" class="perfil-foto" alt="Foto do Aluno">
-            <h2 id="modal-nome" style="color: #2d3748; margin-bottom: 5px; font-size: 22px;">Nome do Aluno</h2>
-            <span id="modal-faixa-badge" class="badge-faixa" style="display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 5px;">Faixa</span>
             
-            <div class="perfil-info">
-                <p><i class="fa-solid fa-envelope" style="color: #718096; width: 16px;"></i> <span id="modal-email">email@teste.com</span></p>
-                <p><i class="fa-solid fa-location-dot" style="color: #718096; width: 16px;"></i> <strong id="modal-unidade">Unidade</strong></p>
-                <p><i class="fa-solid fa-dumbbell" style="color: #718096; width: 16px;"></i> <strong id="modal-presencas">0</strong> presenças totais</p>
+            <div style="display: flex; gap: 15px; text-align: left; align-items: center;">
+                <img id="modal-foto" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" class="perfil-foto" style="margin: 0; width: 80px; height: 80px;" alt="Foto do Aluno">
+                <div>
+                    <h2 id="modal-nome" style="color: #2d3748; margin-bottom: 5px; font-size: 20px;">Nome do Aluno</h2>
+                    <span id="modal-faixa-badge" class="badge-faixa">Faixa</span>
+                </div>
             </div>
             
-            <button onclick="abrirEditar()" style="width: 100%; margin-top: 15px; padding: 12px; background-color: #e2e8f0; color: #2d3748; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s;"><i class="fa-solid fa-pen"></i> Editar Dados</button>
+            <div class="perfil-info">
+                <p><i class="fa-solid fa-id-badge" style="color: #718096; width: 16px;"></i> Matrícula: <strong id="modal-matricula">0000</strong></p>
+                <p><i class="fa-solid fa-location-dot" style="color: #718096; width: 16px;"></i> <strong id="modal-unidade">Unidade</strong></p>
+                <p><i class="fa-solid fa-dumbbell" style="color: #718096; width: 16px;"></i> <strong id="modal-presencas">0</strong> presenças totais</p>
+                <p><i class="fa-solid fa-fire" style="color: #c53030; width: 16px;"></i> <strong id="modal-presencas-recentes" style="color: #c53030;">0</strong> presenças desde a graduação</p>
+            </div>
             
-            <button onclick="resetarSenha()" style="width: 100%; margin-top: 10px; padding: 12px; background-color: transparent; color: #c53030; border: 2px solid #c53030; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s;"><i class="fa-solid fa-key"></i> Redefinir Senha</button>
+            <div class="qr-container">
+                <p style="font-size: 12px; color: #718096; margin-bottom: 5px; font-weight: bold;">QR Code do Aluno</p>
+                <img id="modal-qr" src="" alt="QR Code">
+            </div>
+
+            <div style="text-align: left; margin-top: 15px;">
+                <h3 style="font-size: 15px; color: #2d3748; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">Linha do Tempo</h3>
+                <div id="modal-timeline" class="timeline-container">
+                    <!-- Injetado via JS -->
+                </div>
+            </div>
+            
+            <button onclick="abrirEditar()" style="width: 100%; margin-top: 15px; padding: 10px; background-color: #e2e8f0; color: #2d3748; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;"><i class="fa-solid fa-pen"></i> Editar Info.</button>
+        </div>
+    </div>
+
+    <!-- Modal de Promoção de Faixa -->
+    <div id="modal-promover" class="modal">
+        <div class="modal-content" style="text-align: left;">
+            <button class="close-btn" onclick="fecharPromover()" aria-label="Fechar Promoção"><i class="fa-solid fa-xmark"></i></button>
+            <h2 style="color: #2d3748; margin-bottom: 20px; font-size: 20px;"><i class="fa-solid fa-medal" style="color: #c53030;"></i> Promover Aluno</h2>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; color: #4a5568;">Nova Faixa</label>
+                <select id="promo-faixa" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 5px; font-size: 14px; outline: none;">
+                    <option value="Azul">Faixa Azul</option>
+                    <option value="Roxa">Faixa Roxa</option>
+                    <option value="Marrom">Faixa Marrom</option>
+                    <option value="Preta">Faixa Preta</option>
+                </select>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; color: #4a5568;">Mestre / Promovido Por</label>
+                <input type="text" id="promo-mestre" placeholder="Ex: Mestre Carlos" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 5px; font-size: 14px; outline: none;" required>
+            </div>
+            <button onclick="confirmarPromocao()" style="width: 100%; padding: 12px; background-color: #c53030; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s;">Confirmar Graduação</button>
         </div>
     </div>
 

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar Aula - Gracie Barra</title>
+    <link rel="stylesheet" href="style-principal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#c53030">
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <h1>Agendar <span class="user-name">Aula</span></h1>
+            <p style="color: #718096; font-size: 14px;">Reserve seu lugar no tatame</p>
+        </header>
+
+        <main class="content-section">
+            <div id="lista-aulas" class="historico-container" style="padding-top: 10px;">
+                <div class="empty-state"><i class="fa-solid fa-spinner fa-spin"></i> Carregando aulas disponíveis...</div>
+            </div>
+        </main>
+
+        <!-- Menu Inferior -->
+        <nav class="bottom-nav">
+            <a href="principal.html" class="nav-item"><i class="fa-solid fa-camera"></i><span>QR Code</span></a>
+            <a href="agendar.html" class="nav-item active"><i class="fa-solid fa-calendar-check"></i><span>Agendar</span></a>
+            <a href="historico.html" class="nav-item"><i class="fa-solid fa-calendar-days"></i><span>Histórico</span></a>
+            <a href="evolucao.html" class="nav-item"><i class="fa-solid fa-chart-line"></i><span>Evolução</span></a>
+            <a href="conta.html" class="nav-item"><i class="fa-solid fa-user"></i><span>Conta</span></a>
+        </nav>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="script-agendar.js"></script>
+</body>
+</html>
