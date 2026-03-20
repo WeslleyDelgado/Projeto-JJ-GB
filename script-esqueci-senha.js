@@ -7,20 +7,12 @@ document.getElementById('form-recuperar').addEventListener('submit', function(e)
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
     btn.disabled = true;
 
-    fetch(`${API_BASE_URL}/api/recuperar-senha`, {
+    apiFetch('/api/recuperar-senha', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
         body: JSON.stringify({ email: email })
     })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(err => { throw new Error(err.erro || 'Erro na solicitação'); });
-        }
-        return response.json();
-    })
     .then(data => {
+        if (data.erro) throw new Error(data.erro);
         alert(data.mensagem); // Mensagem de sucesso vinda do backend
         window.location.href = "index.html"; // Joga o usuário de volta pro login
     })

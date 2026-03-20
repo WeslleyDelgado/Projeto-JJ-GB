@@ -5,7 +5,7 @@
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#f0f2f2",
-  "theme_color": "#083e76",
+  "theme_color": "#c53030",
   "icons": [
     {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Gracie_Barra_Logo.svg/192px-Gracie_Barra_Logo.svg.png",

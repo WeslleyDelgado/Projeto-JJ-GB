@@ -27,7 +27,7 @@ body {
 
 .btn-back {
     text-decoration: none;
-    color: #2c5282;
+    color: #c53030;
     font-size: 20px;
     display: inline-block;
     margin-bottom: 20px;
@@ -73,12 +73,12 @@ body {
 }
 
 .input-group input:focus {
-    border-color: #2c5282;
+    border-color: #c53030;
 }
 
 .btn-primary {
     width: 100%;
-    background-color: #083e76;
+    background-color: #c53030;
     color: white;
     border: none;
     padding: 15px;
@@ -91,7 +91,7 @@ body {
 }
 
 .btn-primary:hover {
-    background-color: #062c54;
+    background-color: #9b2c2c;
 }
 
 .footer-text {
@@ -102,7 +102,7 @@ body {
 }
 
 .footer-text a {
-    color: #2c5282;
+    color: #c53030;
     text-decoration: none;
     font-weight: bold;
 }

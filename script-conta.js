@@ -16,13 +16,7 @@ window.onload = function() {
     let fotoBase64 = null; // Variável para guardar a foto em texto
 
     // Busca os dados do usuário no servidor
-    fetch(`${API_BASE_URL}/api/usuario`, {
-        method: 'GET',
-        headers: {
-            'Authorization': token
-        }
-    })
-    .then(response => response.json())
+    apiFetch('/api/usuario', { token })
     .then(usuario => {
         if (usuario.erro) {
             alert(usuario.erro);
@@ -91,15 +85,11 @@ window.onload = function() {
             dadosAtualizados.novaSenha = novaSenha;
         }
 
-        fetch(`${API_BASE_URL}/api/usuario`, {
+        apiFetch('/api/usuario', {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token
-            },
+            token: token,
             body: JSON.stringify(dadosAtualizados)
         })
-        .then(response => response.json())
         .then(data => {
             if (data.erro) {
                 alert(data.erro);
@@ -130,21 +120,3 @@ window.onload = function() {
         window.location.href = "index.html";
     });
 };
-
-function calcularFaixa(total, manual) {
-    if (manual) {
-        const faixas = {
-            "Branca": { nome: "Faixa Branca", cor: "#f8f9fa", texto: "#2d3748", borda: "#cbd5e0" },
-            "Azul": { nome: "Faixa Azul", cor: "#3182ce", texto: "#ffffff", borda: "#2b6cb0" },
-            "Roxa": { nome: "Faixa Roxa", cor: "#805ad5", texto: "#ffffff", borda: "#6b46c1" },
-            "Marrom": { nome: "Faixa Marrom", cor: "#744210", texto: "#ffffff", borda: "#5f370e" },
-            "Preta": { nome: "Faixa Preta", cor: "#1a202c", texto: "#ffffff", borda: "#000000" }
-        };
-        return faixas[manual] || faixas["Branca"];
-    }
-    if (total < 20) return { nome: "Faixa Branca", cor: "#f8f9fa", texto: "#2d3748", borda: "#cbd5e0" };
-    if (total < 60) return { nome: "Faixa Azul", cor: "#3182ce", texto: "#ffffff", borda: "#2b6cb0" };
-    if (total < 120) return { nome: "Faixa Roxa", cor: "#805ad5", texto: "#ffffff", borda: "#6b46c1" };
-    if (total < 200) return { nome: "Faixa Marrom", cor: "#744210", texto: "#ffffff", borda: "#5f370e" };
-    return { nome: "Faixa Preta", cor: "#1a202c", texto: "#ffffff", borda: "#000000" };
-}

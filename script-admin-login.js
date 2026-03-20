@@ -8,16 +8,12 @@ document.getElementById('admin-login-form').addEventListener('submit', function(
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verificando...';
     btn.disabled = true;
     
-    fetch(`${API_BASE_URL}/api/admin/login`, {
+    apiFetch('/api/admin/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ usuario: usuario, senha: senha })
     })
-    .then(response => {
-        if (!response.ok) return response.json().then(err => { throw new Error(err.erro); });
-        return response.json();
-    })
     .then(data => {
+        if (data.erro) throw new Error(data.erro);
         if (data.token) {
             localStorage.setItem('admin_token', data.token); // Salva um token separado do aluno
             window.location.href = "admin.html";

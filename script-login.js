@@ -10,20 +10,12 @@ document.getElementById('login-form').addEventListener('submit', function(e) {
     btn.disabled = true;
     
     // Comunicação com o Backend Seguro
-    fetch(`${API_BASE_URL}/api/login`, {
+    apiFetch('/api/login', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
         body: JSON.stringify({ email: email, senha: senha })
     })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(err => { throw new Error(err.erro || 'Falha no login'); });
-        }
-        return response.json();
-    })
     .then(data => {
+        if (data.erro) throw new Error(data.erro);
         if (data.token) {
             // Salva o token seguro e o nome do usuário
             localStorage.setItem('auth_token', data.token);

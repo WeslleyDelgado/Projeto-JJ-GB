@@ -11,12 +11,9 @@ window.onload = function() {
     function carregarDados() {
         document.getElementById('tabela-corpo').innerHTML = '<tr><td colspan="4" style="text-align: center;"><i class="fa-solid fa-spinner fa-spin"></i> Carregando...</td></tr>';
 
-        fetch(`${API_BASE_URL}/api/admin/presencas`, {
-            method: 'GET',
-            headers: { 'Authorization': token }
-        })
-        .then(response => response.json())
+        apiFetch('/api/admin/presencas', { token })
         .then(data => {
+            if (data.erro) throw new Error(data.erro);
             todasPresencas = data;
             renderizarTabela(data);
         })
@@ -40,7 +37,7 @@ window.onload = function() {
             
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td style="font-weight: bold; color: #2c5282;">${item.nome}</td>
+                <td style="font-weight: bold; color: #c53030;">${item.nome}</td>
                 <td><span class="badge">${nomeUnidade}</span></td>
                 <td>${item.aula}</td>
                 <td style="color: #4a5568; font-size: 14px;">${item.data}</td>

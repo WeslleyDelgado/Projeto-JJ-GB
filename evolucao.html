@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Evolução</title>
+    <link rel="stylesheet" href="style-principal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#c53030">
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <h1>Sua <span class="user-name">Evolução</span></h1>
+            <p style="color: #718096; font-size: 14px;">Acompanhe sua jornada no Jiu-Jitsu</p>
+        </header>
+
+        <main class="content-section" style="padding-top: 10px;">
+            <div class="evolucao-card">
+                <h2 id="evo-faixa-nome" style="color: #2d3748; font-size: 20px; margin-bottom: 5px;">Carregando...</h2>
+                <p style="color: #718096; font-size: 14px; font-weight: 600;"><span id="evo-total-aulas">0</span> aulas registradas</p>
+                
+                <!-- Desenho da faixa (A cor e os graus são injetados pelo JS) -->
+                <div id="evo-belt-graphic" class="evolucao-belt-img" style="background-color: #f8f9fa; border: 2px solid #cbd5e0;">
+                    <div id="evo-belt-tip" class="evolucao-belt-tip" style="background-color: #000;">
+                        <div id="grau-1" class="evolucao-degree"></div>
+                        <div id="grau-2" class="evolucao-degree"></div>
+                        <div id="grau-3" class="evolucao-degree"></div>
+                        <div id="grau-4" class="evolucao-degree"></div>
+                    </div>
+                </div>
+
+                <div id="evo-disclaimer" style="display: none; font-size: 11px; color: #a0aec0; margin-top: -10px; margin-bottom: 15px;">
+                    * Sua faixa foi definida pelo professor. A barra de progresso abaixo usa o cálculo automático desde o início da jornada.
+                </div>
+
+                <p id="evo-next-step" style="font-size: 14px; color: #4a5568; margin-bottom: 5px;">Calculando próximo passo...</p>
+                
+                <!-- Barra carregando... -->
+                <div class="progress-container">
+                    <div id="evo-progress-bar" class="progress-bar"></div>
+                </div>
+                <div class="evolucao-stats">
+                    <span>Início</span>
+                    <span id="evo-classes-left">...</span>
+                </div>
+            </div>
+            
+            <!-- Caixa de Informações de Requisitos -->
+            <div class="evolucao-card" style="text-align: left;">
+                <h3 style="font-size: 16px; color: #2d3748; margin-bottom: 15px;"><i class="fa-solid fa-medal" style="color: #c53030;"></i> Sistema de Graduação</h3>
+                <ul style="font-size: 13px; color: #4a5568; line-height: 1.6; list-style: none;">
+                    <li style="margin-bottom: 8px;"><strong style="color: #333;">Faixa Branca:</strong> 0 a 149 aulas (30/grau)</li>
+                    <li style="margin-bottom: 8px;"><strong style="color: #3182ce;">Faixa Azul:</strong> 150 a 299 aulas (30/grau)</li>
+                    <li style="margin-bottom: 8px;"><strong style="color: #805ad5;">Faixa Roxa:</strong> 300 a 449 aulas (30/grau)</li>
+                    <li style="margin-bottom: 8px;"><strong style="color: #744210;">Faixa Marrom:</strong> 450 a 599 aulas (30/grau)</li>
+                    <li style="margin-bottom: 8px;"><strong style="color: #1a202c;">Faixa Preta:</strong> 600+ aulas</li>
+                </ul>
+            </div>
+        </main>
+
+        <!-- Cópia exata do Bottom Nav, mas com Evolução em 'active' -->
+        <nav class="bottom-nav">
+            <a href="principal.html" class="nav-item"><i class="fa-solid fa-camera"></i><span>QR Code</span></a>
+            <a href="historico.html" class="nav-item"><i class="fa-solid fa-calendar-days"></i><span>Histórico</span></a>
+            <a href="evolucao.html" class="nav-item active"><i class="fa-solid fa-chart-line"></i><span>Evolução</span></a>
+            <a href="conta.html" class="nav-item"><i class="fa-solid fa-user"></i><span>Conta</span></a>
+        </nav>
+    </div>
+    <script src="config.js"></script>
+    <script src="script-evolucao.js"></script>
+</body>
+</html>

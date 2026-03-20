@@ -9,13 +9,7 @@ window.onload = function() {
     }
 
     // Busca o histórico diretamente do servidor seguro
-    fetch(`${API_BASE_URL}/api/presencas`, {
-        method: 'GET',
-        headers: {
-            'Authorization': token // O servidor sabe quem somos por causa do token
-        }
-    })
-    .then(response => response.json())
+    apiFetch('/api/presencas', { token })
     .then(historico => {
         if (historico.erro) {
             alert(historico.erro);
