@@ -1,8 +1,8 @@
-window.onload = function() {
+globalThis.onload = function() {
     const token = localStorage.getItem('admin_token');
     if (!token) {
         alert("Acesso restrito ao Administrador.");
-        window.location.href = "admin-login.html";
+        globalThis.location.href = "admin-login.html";
         return;
     }
 
@@ -107,7 +107,7 @@ window.onload = function() {
     }
 
     // Função chamada pelos botões de Voltar e Avançar no HTML
-    window.mudarPagina = function(direcao) {
+    globalThis.mudarPagina = function(direcao) {
         const totalPages = Math.ceil(alunosFiltrados.length / itemsPerPage) || 1;
         const novaPagina = currentPage + direcao;
         
@@ -117,7 +117,7 @@ window.onload = function() {
         }
     };
 
-    window.mudarFaixa = function(id, novaFaixa) {
+    globalThis.mudarFaixa = function(id, novaFaixa) {
         fetch(`${API_BASE_URL}/api/admin/alunos/${id}/faixa`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json', 'Authorization': token },
@@ -133,7 +133,7 @@ window.onload = function() {
     });
 
     // --- Funções do Modal de Perfil do Aluno ---
-    window.abrirPerfil = function(id) {
+    globalThis.abrirPerfil = function(id) {
         const aluno = todosAlunos.find(a => a.id === id);
         if (!aluno) return;
         alunoSelecionado = aluno;
@@ -164,11 +164,11 @@ window.onload = function() {
         document.getElementById('modal-perfil').style.display = 'flex'; // Exibe o modal
     };
 
-    window.fecharPerfil = function() {
+    globalThis.fecharPerfil = function() {
         document.getElementById('modal-perfil').style.display = 'none'; // Esconde o modal
     };
 
-    window.abrirEditar = function() {
+    globalThis.abrirEditar = function() {
         if (!alunoSelecionado) return;
         
         // Preenche o formulário com os dados atuais do aluno
@@ -181,11 +181,11 @@ window.onload = function() {
         document.getElementById('modal-editar').style.display = 'flex'; // Abre o modo de edição
     };
 
-    window.fecharEditar = function() {
+    globalThis.fecharEditar = function() {
         document.getElementById('modal-editar').style.display = 'none';
     };
 
-    window.excluirAluno = function() {
+    globalThis.excluirAluno = function() {
         if (!alunoSelecionado) return;
 
         const confirmacao = confirm(`⚠️ ATENÇÃO: Você está prestes a excluir o aluno ${alunoSelecionado.nome}!\n\nEsta ação apagará a conta do aluno e TODO o seu histórico de presenças.\nTem certeza que deseja continuar?`);
@@ -213,7 +213,7 @@ window.onload = function() {
         }
     };
 
-    window.resetarSenha = function() {
+    globalThis.resetarSenha = function() {
         if (!alunoSelecionado) return;
 
         const confirmacao = confirm(`Você tem certeza que deseja redefinir a senha de ${alunoSelecionado.nome}?\n\nA nova senha temporária será "Mudar123". O aluno deverá usá-la para logar e trocá-la imediatamente.`);

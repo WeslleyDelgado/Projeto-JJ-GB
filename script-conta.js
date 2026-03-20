@@ -1,9 +1,9 @@
-window.onload = function() {
+globalThis.onload = function() {
     const token = localStorage.getItem('auth_token');
 
     if (!token) {
         alert("Faça login para acessar sua conta.");
-        window.location.href = "index.html";
+        globalThis.location.href = "index.html";
         return;
     }
 
@@ -22,7 +22,7 @@ window.onload = function() {
             alert(usuario.erro);
             if (usuario.erro.includes("Token") || usuario.erro.includes("Acesso negado") || usuario.erro.includes("não encontrado")) {
                 localStorage.removeItem('auth_token'); // Limpa a sujeira apenas se for erro de autenticação
-                window.location.href = "index.html"; // Redireciona para login
+                globalThis.location.href = "index.html"; // Redireciona para login
             }
         } else {
             inputNome.value = usuario.nome;
@@ -117,6 +117,6 @@ window.onload = function() {
     document.getElementById('btn-logout').addEventListener('click', function() {
         localStorage.removeItem('auth_token');
         localStorage.removeItem('usuario_nome');
-        window.location.href = "index.html";
+        globalThis.location.href = "index.html";
     });
 };

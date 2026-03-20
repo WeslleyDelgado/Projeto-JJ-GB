@@ -14,7 +14,7 @@ document.getElementById('form-recuperar').addEventListener('submit', function(e)
     .then(data => {
         if (data.erro) throw new Error(data.erro);
         alert(data.mensagem); // Mensagem de sucesso vinda do backend
-        window.location.href = "index.html"; // Joga o usuário de volta pro login
+        globalThis.location.href = "index.html"; // Joga o usuário de volta pro login
     })
     .catch(error => {
         console.error("Erro na requisição:", error);

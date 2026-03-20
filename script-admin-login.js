@@ -16,7 +16,7 @@ document.getElementById('admin-login-form').addEventListener('submit', function(
         if (data.erro) throw new Error(data.erro);
         if (data.token) {
             localStorage.setItem('admin_token', data.token); // Salva um token separado do aluno
-            window.location.href = "admin.html";
+            globalThis.location.href = "admin.html";
         }
     })
     .catch(error => {

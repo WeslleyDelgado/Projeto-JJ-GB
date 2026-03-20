@@ -3,7 +3,7 @@ const API_BASE_URL = 'https://projeto-jj-gb.onrender.com'; // Sem a barra / no f
 
 // Registra o Service Worker para tornar o app instalável (PWA)
 if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
+    globalThis.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js').then(reg => {
             console.log('Service Worker registrado com sucesso!');
         }).catch(err => {

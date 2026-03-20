@@ -1,7 +1,7 @@
-window.onload = function() {
+globalThis.onload = function() {
     const token = localStorage.getItem('auth_token');
     if (!token) {
-        window.location.href = "index.html";
+        globalThis.location.href = "index.html";
         return;
     }
 

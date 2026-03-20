@@ -1,5 +1,5 @@
 
-window.onload = function() {
+globalThis.onload = function() {
     const nomeSalvo = localStorage.getItem('usuario_nome');
     if (nomeSalvo) {
         document.querySelector('.user-name').innerText = nomeSalvo;
@@ -14,7 +14,7 @@ window.onload = function() {
                 console.warn("Sessão inválida:", usuario.erro);
                 if (usuario.erro.includes("Token") || usuario.erro.includes("Acesso negado") || usuario.erro.includes("não encontrado")) {
                     localStorage.removeItem('auth_token');
-                    window.location.href = "index.html";
+                    globalThis.location.href = "index.html";
                 }
                 return; // Interrompe a execução para não quebrar o script
             }
@@ -110,7 +110,7 @@ function startScanner() {
                 const token = localStorage.getItem('auth_token');
                 if (!token) {
                     alert("Você precisa estar logado para registrar presença.");
-                    window.location.href = "index.html";
+                    globalThis.location.href = "index.html";
                     return;
                 }
 
@@ -159,7 +159,7 @@ function simulateScan() {
     const token = localStorage.getItem('auth_token');
     if (!token) {
         alert("Você precisa estar logado para registrar presença.");
-        window.location.href = "index.html";
+        globalThis.location.href = "index.html";
         return;
     }
 

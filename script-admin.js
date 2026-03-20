@@ -1,8 +1,8 @@
-window.onload = function() {
+globalThis.onload = function() {
     const token = localStorage.getItem('admin_token'); // Usa o token de admin
     if (!token) {
         alert("Acesso restrito ao Administrador.");
-        window.location.href = "admin-login.html";
+        globalThis.location.href = "admin-login.html";
         return;
     }
 
@@ -50,7 +50,7 @@ window.onload = function() {
     document.getElementById('btn-sair-admin').addEventListener('click', function(e) {
         e.preventDefault();
         localStorage.removeItem('admin_token');
-        window.location.href = "index.html";
+        globalThis.location.href = "index.html";
     });
 
     // Lógica da Barra de Pesquisa (Filtro em tempo real)

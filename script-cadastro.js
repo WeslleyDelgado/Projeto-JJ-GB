@@ -66,7 +66,7 @@ document.getElementById('form-cadastro').addEventListener('submit', function(e) 
     })
     .then(data => {
         alert(data.mensagem);
-        window.location.href = "index.html"; // Redireciona para o login após o sucesso
+        globalThis.location.href = "index.html"; // Redireciona para o login após o sucesso
     })
     .catch(error => {
         console.error("Erro ao criar conta:", error);

@@ -20,7 +20,7 @@ document.getElementById('login-form').addEventListener('submit', function(e) {
             // Salva o token seguro e o nome do usuário
             localStorage.setItem('auth_token', data.token);
             localStorage.setItem('usuario_nome', data.nome);
-            window.location.href = "principal.html";
+            globalThis.location.href = "principal.html";
         }
     })
     .catch(error => {
@@ -33,5 +33,5 @@ document.getElementById('login-form').addEventListener('submit', function(e) {
 
 function socialLogin(provider) {
     alert("Entrando com " + provider + "...");
-    window.location.href = "principal.html";
+    globalThis.location.href = "principal.html";
 }

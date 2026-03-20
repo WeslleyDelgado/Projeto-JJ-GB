@@ -1,10 +1,10 @@
-window.onload = function() {
+globalThis.onload = function() {
     const listaContainer = document.getElementById('lista-historico');
     const token = localStorage.getItem('auth_token');
 
     if (!token) {
         alert("Faça login para ver seu histórico.");
-        window.location.href = "index.html";
+        globalThis.location.href = "index.html";
         return;
     }
 
@@ -16,7 +16,7 @@ window.onload = function() {
             // Expulsa o usuário apenas se for erro de autenticação
             if (historico.erro.includes("Token") || historico.erro.includes("Acesso negado") || historico.erro.includes("não encontrado")) {
                 localStorage.removeItem('auth_token');
-                window.location.href = "index.html";
+                globalThis.location.href = "index.html";
             }
             return;
         }
