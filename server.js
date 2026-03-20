@@ -28,7 +28,6 @@ const pool = new Pool({
 // Rota de Cadastro Seguro
 app.post('/api/cadastro', async (req, res) => {
     console.log("\n=== NOVA TENTATIVA DE CADASTRO ===");
-    console.log("Dados recebidos do site:", req.body);
     try {
         const { nome, email, senha, unidade } = req.body;
         
