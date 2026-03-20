@@ -64,9 +64,9 @@ window.onload = function() {
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td style="font-weight: bold;">
-                    <a href="#" onclick="abrirPerfil(${aluno.id}); return false;" style="color: #c53030; text-decoration: none; display: flex; align-items: center; gap: 8px;" title="Ver Perfil Completo">
+                    <button onclick="abrirPerfil(${aluno.id})" style="background: none; border: none; color: #c53030; font-size: 16px; font-weight: bold; cursor: pointer; padding: 0; display: flex; align-items: center; gap: 8px;" title="Ver Perfil Completo">
                         <i class="fa-regular fa-id-card"></i> ${aluno.nome}
-                    </a>
+                    </button>
                 </td>
                 <td><span class="badge">${nomeUnidade}</span></td>
                 <td style="font-weight: bold; text-align: center;">${aluno.total_presencas}</td>
