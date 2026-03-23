@@ -52,31 +52,6 @@ navItems.forEach(item => {
     });
 });
 
-async function startCamera() {
-    const video = document.getElementById('preview');
-    const icon = document.getElementById('placeholder-icon');
-    const statusText = document.getElementById('status-text');
-    const btn = document.getElementById('btn-action');
-
-    try {
-        // Solicita acesso à câmera (preferencialmente a traseira em celulares)
-        const stream = await navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: "environment" } 
-        });
-
-        video.srcObject = stream;
-        video.style.display = "block"; // Mostra o vídeo
-        icon.style.display = "none";   // Esconde o ícone de câmera parado
-        
-        statusText.innerHTML = "Escaneando...";
-        btn.innerHTML = "Capturando...";
-        btn.style.backgroundColor = "#276749"; // Muda para verde para indicar atividade
-
-    } catch (err) {
-        console.error("Erro ao acessar a câmera: ", err);
-        alert("Ops! Precisamos de permissão para usar a câmera.");
-    }
-}
 let html5QrCode;
 
 function startScanner() {
@@ -90,62 +65,71 @@ function startScanner() {
     if (statusText) statusText.style.display = "block";
 
     // Configuração do scanner
-    html5QrCode = new Html5Qrcode("reader");
+    if (!html5QrCode) {
+        html5QrCode = new Html5Qrcode("reader");
+    } else if (html5QrCode.isScanning) {
+        console.warn("Scanner já está em execução.");
+        return;
+    }
 
     const config = { 
         fps: 10, 
         qrbox: { width: 200, height: 200 } 
     };
 
-    // Inicia a câmera traseira
+    // Callback isolado para permitir o fallback entre câmeras
+    const onScanSuccess = (decodedText, decodedResult) => {
+        console.log(`Código lido: ${decodedText}`);
+
+        html5QrCode.stop().then(() => {
+            // 1. Recuperar o token seguro salvo no login
+            const token = localStorage.getItem('auth_token');
+            if (!token) {
+                alert("Você precisa estar logado para registrar presença.");
+                globalThis.location.href = "index.html";
+                return;
+            }
+
+            // 2. Enviar a presença para o backend seguro
+            apiFetch('/api/presencas', {
+                method: 'POST',
+                token: token,
+                body: JSON.stringify({ aula: decodedText })
+            })
+            .then(data => {
+                if (data.erro) {
+                    alert(data.erro);
+                } else {
+                    // 3. Mostrar sucesso na tela
+                    document.getElementById('reader').style.display = "none";
+                    if (document.getElementById('status')) document.getElementById('status').style.display = "none";
+                    resultMsg.style.display = "block";
+                    resultMsg.innerHTML = `Presença Confirmada!<br><small>${decodedText}</small>`;
+                    btn.innerHTML = "Escanear Novamente";
+                }
+            })
+            .catch(err => {
+                console.error("Erro ao registrar presença no servidor:", err);
+                alert("Erro de conexão.");
+            });
+        }).catch(err => {
+            console.error("Erro ao parar a câmera", err);
+        });
+    };
+
+    // Tenta iniciar a câmera traseira
     html5QrCode.start(
         { facingMode: "environment" }, 
         config,
-        (decodedText, decodedResult) => {
-            // SUCESSO: O que fazer quando ler o código
-            console.log(`Código lido: ${decodedText}`);
-
-            html5QrCode.stop().then(() => {
-                // 1. Recuperar o token seguro salvo no login
-                const token = localStorage.getItem('auth_token');
-                if (!token) {
-                    alert("Você precisa estar logado para registrar presença.");
-                    globalThis.location.href = "index.html";
-                    return;
-                }
-
-                // 2. Enviar a presença para o backend seguro
-                apiFetch('/api/presencas', {
-                    method: 'POST',
-                    token: token,
-                    body: JSON.stringify({ aula: decodedText })
-                })
-                .then(data => {
-                    if (data.erro) {
-                        alert(data.erro);
-                    } else {
-                        // 3. Mostrar sucesso na tela
-                        document.getElementById('reader').style.display = "none";
-                        if (document.getElementById('status')) document.getElementById('status').style.display = "none";
-                        resultMsg.style.display = "block";
-                        resultMsg.innerHTML = `Presença Confirmada!<br><small>${decodedText}</small>`;
-                        btn.innerHTML = "Escanear Novamente";
-                    }
-                })
-                .catch(err => {
-                    console.error("Erro ao registrar presença no servidor:", err);
-                    alert("Erro de conexão.");
-                });
-            }).catch(err => {
-                console.error("Erro ao parar a câmera", err);
-            });
-        },
-        (errorMessage) => {
-            // Erro de leitura (comum enquanto procura o código)
-        }
+        onScanSuccess,
+        (errorMessage) => { /* Ignorar erros intermitentes de frame */ }
     ).catch((err) => {
-        console.error("Erro ao iniciar:", err);
-        alert("Erro: Certifique-se de estar em HTTPS ou Localhost.");
+        console.warn("Câmera traseira falhou, tentando câmera frontal...", err);
+        html5QrCode.start({ facingMode: "user" }, config, onScanSuccess, (errorMessage) => {})
+        .catch((errFallback) => {
+            console.error("Erro definitivo ao iniciar a câmera:", errFallback);
+            alert("Erro: Não foi possível acessar a câmera. Acesse via HTTPS ou verifique permissões.");
+        });
     });
 
     btn.innerHTML = "Procurando...";

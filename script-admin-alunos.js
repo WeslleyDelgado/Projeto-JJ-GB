@@ -111,7 +111,7 @@ globalThis.onload = function() {
 
     document.getElementById('search-input').addEventListener('input', function(e) {
         const termo = e.target.value.toLowerCase();
-        alunosFiltrados = todosAlunos.filter(item => item.nome.toLowerCase().includes(termo));
+        alunosFiltrados = todosAlunos.filter(item => item.nome.toLowerCase().includes(termo) || (item.unidade && item.unidade.toLowerCase().includes(termo)));
         currentPage = 1; // Reseta para a página 1 ao fazer uma nova busca
         renderizarTabelaAtiva();
     });
