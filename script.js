@@ -117,23 +117,44 @@ function startScanner() {
         });
     };
 
+    // Dá um feedback visual de que está tentando ligar a câmera
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Iniciando...';
+    btn.disabled = true;
+
     // Tenta iniciar a câmera traseira
     html5QrCode.start(
         { facingMode: "environment" }, 
         config,
         onScanSuccess,
         (errorMessage) => { /* Ignorar erros intermitentes de frame */ }
-    ).catch((err) => {
+    ).then(() => {
+        // SUCESSO: Câmera traseira abriu
+        btn.innerHTML = "Procurando...";
+        btn.style.backgroundColor = "var(--cor-primaria-hover)";
+        btn.disabled = false;
+    }).catch((err) => {
         console.warn("Câmera traseira falhou, tentando câmera frontal...", err);
         html5QrCode.start({ facingMode: "user" }, config, onScanSuccess, (errorMessage) => {})
+        .then(() => {
+            // SUCESSO: Câmera frontal abriu
+            btn.innerHTML = "Procurando...";
+            btn.style.backgroundColor = "var(--cor-primaria-hover)";
+            btn.disabled = false;
+        })
         .catch((errFallback) => {
             console.error("Erro definitivo ao iniciar a câmera:", errFallback);
-            alert("Erro: Não foi possível acessar a câmera. Acesse via HTTPS ou verifique permissões.");
+            
+            // Traduz os erros mais comuns de dispositivos móveis
+            let msgErro = "Erro desconhecido ao acessar a câmera.";
+            if (errFallback.name === "NotAllowedError") msgErro = "Permissão negada. Acesse as configurações do seu navegador e permita o uso da câmera para este site.";
+            else if (errFallback.name === "NotFoundError") msgErro = "Nenhuma câmera foi detectada no dispositivo.";
+            else if (errFallback.name === "NotReadableError") msgErro = "A câmera já está sendo usada por outro aplicativo ou falhou fisicamente.";
+            
+            alert("Erro: " + msgErro);
+            btn.innerHTML = "Tentar Novamente";
+            btn.disabled = false;
         });
     });
-
-    btn.innerHTML = "Procurando...";
-    btn.style.backgroundColor = "var(--cor-primaria-hover)";
 }
 
 function simulateScan() {
